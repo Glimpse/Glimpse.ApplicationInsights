@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<package >
+  <metadata>
+    <id>Glimpse.ApplicationInsights</id>
+    <version>0.0.0</version>
+    <title>Glimpse Application Insights</title>
+    <authors>URL Team GT</authors>
+    <owners>URL Team GT</owners>
+    <licenseUrl>http://www.opensource.org/licenses/apache2.0</licenseUrl>
+    <projectUrl>http://getglimpse.com</projectUrl>
+	<iconUrl>http://getglimpse.com/content/glimpse100.png</iconUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>Integration of Glimpse and Application Insights.</description>
+    <releaseNotes>No release yet.</releaseNotes>
+    <copyright>Copyright 2015</copyright>
+    <tags>Glimpse ApplicationInsights diagnostics</tags>
+  </metadata>
+</package>
