@@ -2,7 +2,7 @@
 <package >
   <metadata>
     <id>Glimpse.ApplicationInsights</id>
-    <version>0.0.0</version>
+    <version>$version$</version>
     <title>Glimpse Application Insights</title>
     <authors>URL Team GT</authors>
     <owners>URL Team GT</owners>
