@@ -7,6 +7,7 @@ using Glimpse.Core.Framework;
 using Glimpse.Core.Message;
 using Microsoft.ApplicationInsights.Channel;
 using Microsoft.ApplicationInsights.DataContracts;
+using Microsoft.ApplicationInsights.Extensibility;
 
 namespace Glimpse.ApplicationInsights
 {
@@ -15,7 +16,13 @@ namespace Glimpse.ApplicationInsights
         [ThreadStatic]
         private static Stopwatch fromLastWatch;
 
+        /// <summary>
+        /// Initializes the channel from ApplicationInsights.config file.
+        /// </summary>
+        public ITelemetryChannel Channel { get; private set; }
+
         private IMessageBroker messageBroker;
+
         internal Func<IExecutionTimer> TimerStrategy { get; set; }
 
         internal IMessageBroker MessageBroker
@@ -32,21 +39,44 @@ namespace Glimpse.ApplicationInsights
 
         public bool? DeveloperMode
         {
-            get;
-            set;
+            get
+            {
+                return this.Channel.DeveloperMode;
+            }
+            set
+            {
+                this.Channel.DeveloperMode = value;
+            }
         }
 
         public string EndpointAddress
         {
-            get;
-            set;
+            get
+            {
+                return this.Channel.EndpointAddress;
+            }
+            set
+            {
+                this.Channel.EndpointAddress = value;
+            }
         }
 
         public void Flush()
         {
-
+            this.Channel.Flush();
         }
 
+        public void Dispose()
+        {
+            this.Channel.Dispose();
+        }
+
+        /// <summary>
+        /// Sends telemetry data item to the configured channel if the instrumentation key
+        /// is not empty. Also publiches the telemetry item to the MessageBroker. Filters
+        /// out the requests to Glimpse handler.
+        /// </summary>
+        /// <param name="item">Item to send.</param>
         public void Send(ITelemetry item)
         {
             var timer = TimerStrategy();
@@ -54,6 +84,16 @@ namespace Glimpse.ApplicationInsights
             if (timer == null || MessageBroker == null)
             {
                 return;
+            }
+
+            //Filter the request telemetry to glimpse.axd
+            if (item is RequestTelemetry)
+            {
+                var request = item as RequestTelemetry;
+                if (request.Url.AbsolutePath.ToLower().EndsWith("glimpse.axd"))
+                {
+                    return;
+                }
             }
 
             if (item is DependencyTelemetry)
@@ -76,16 +116,15 @@ namespace Glimpse.ApplicationInsights
                     FromLast = CalculateFromLast(timer),
                     IndentLevel = 0
                 };
-
                 MessageBroker.Publish(model);
             }
 
-            messageBroker.Publish(item);
-        }
+            if (!TelemetryConfiguration.Active.InstrumentationKey.ToString().Equals("00000000-0000-0000-0000-000000000000"))
+            {
+                this.Channel.Send(item);
+            }
 
-        public void Dispose()
-        {
-            //do nothing
+            messageBroker.Publish(item);
         }
 
         private TimeSpan CalculateFromLast(IExecutionTimer timer)
