@@ -11,15 +11,20 @@ using Microsoft.ApplicationInsights.Extensibility;
 
 namespace Glimpse.ApplicationInsights
 {
+    /// <summary>
+    /// Telemetry channel that will send Application Insights telemetry
+    /// to Glimpse message broker and to the Application Insights channel.
+    /// </summary>
     public class GlimpseTelemetryChannel : ITelemetryChannel
     {
         [ThreadStatic]
         private static Stopwatch fromLastWatch;
 
         /// <summary>
-        /// Initializes the channel from ApplicationInsights.config file.
+        /// Initializes the channel from ApplicationInsights.config file that
+        /// will send the telemetry to Application Insights.
         /// </summary>
-        public ITelemetryChannel Channel { get; private set; }
+        public ITelemetryChannel ApplicationInsightsChannel { get; private set; }
 
         private IMessageBroker messageBroker;
 
@@ -36,39 +41,78 @@ namespace Glimpse.ApplicationInsights
             MessageBroker = GlimpseConfiguration.GetConfiguredMessageBroker();
             TimerStrategy = GlimpseConfiguration.GetConfiguredTimerStrategy();
         }
-
+        /// <summary>
+        /// Gets or sets a value indicating whether developer mode 
+        /// of the telemetry transmission is enabled.
+        /// </summary>
         public bool? DeveloperMode
         {
             get
             {
-                return this.Channel.DeveloperMode;
+                if (this.ApplicationInsightsChannel != null)
+                {
+                    return this.ApplicationInsightsChannel.DeveloperMode;
+                }
+                else
+                {
+                    return true;
+                }
             }
             set
             {
-                this.Channel.DeveloperMode = value;
+                if (this.ApplicationInsightsChannel != null)
+                {
+                    this.ApplicationInsightsChannel.DeveloperMode = value;
+                }
             }
         }
 
+        /// <summary>
+        /// Gets or sets the HTTP address where the telemetry is sent.
+        /// </summary>
         public string EndpointAddress
         {
             get
             {
-                return this.Channel.EndpointAddress;
+                if (this.ApplicationInsightsChannel != null)
+                {
+                    return this.ApplicationInsightsChannel.EndpointAddress;
+                }
+                else
+                {
+                    return "";
+                }
+
             }
             set
             {
-                this.Channel.EndpointAddress = value;
+                if (this.ApplicationInsightsChannel != null)
+                {
+                    this.ApplicationInsightsChannel.EndpointAddress = value;
+                }
             }
         }
 
+        /// <summary>
+        /// Flushes the configured telemetry channel.
+        /// </summary>
         public void Flush()
         {
-            this.Channel.Flush();
+            if (this.ApplicationInsightsChannel != null)
+            {
+                this.ApplicationInsightsChannel.Flush();
+            }
         }
 
+        /// <summary>
+        /// Dispose the channel. Releases unmanaged and - optionally - managed resources.
+        /// </summary>
         public void Dispose()
         {
-            this.Channel.Dispose();
+            if (this.ApplicationInsightsChannel != null)
+            {
+                this.ApplicationInsightsChannel.Dispose();
+            }
         }
 
         /// <summary>
@@ -81,7 +125,7 @@ namespace Glimpse.ApplicationInsights
         {
             var timer = TimerStrategy();
 
-            if (timer == null || MessageBroker == null)
+            if (item == null || timer == null || MessageBroker == null)
             {
                 return;
             }
@@ -90,9 +134,12 @@ namespace Glimpse.ApplicationInsights
             if (item is RequestTelemetry)
             {
                 var request = item as RequestTelemetry;
-                if (request.Url.AbsolutePath.ToLower().EndsWith("glimpse.axd"))
+                if (request.Url.AbsolutePath != null)
                 {
-                    return;
+                    if (request.Url.AbsolutePath.ToLower().EndsWith("glimpse.axd"))
+                    {
+                        return;
+                    }
                 }
             }
 
@@ -119,9 +166,10 @@ namespace Glimpse.ApplicationInsights
                 MessageBroker.Publish(model);
             }
 
-            if (!TelemetryConfiguration.Active.InstrumentationKey.ToString().Equals("00000000-0000-0000-0000-000000000000"))
+            //Filter telemetry with empty instrumentation key
+            if (!item.Context.InstrumentationKey.ToString().Equals("00000000-0000-0000-0000-000000000000"))
             {
-                this.Channel.Send(item);
+                this.ApplicationInsightsChannel.Send(item);
             }
 
             messageBroker.Publish(item);
