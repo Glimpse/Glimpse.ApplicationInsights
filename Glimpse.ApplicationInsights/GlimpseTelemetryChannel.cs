@@ -21,7 +21,7 @@ namespace Glimpse.ApplicationInsights
         private static Stopwatch fromLastWatch;
 
         /// <summary>
-        /// Initializes the channel from ApplicationInsights.config file that
+        /// Gets the channel from ApplicationInsights.config file that
         /// will send the telemetry to Application Insights.
         /// </summary>
         public ITelemetryChannel ApplicationInsightsChannel { get; private set; }
@@ -30,17 +30,15 @@ namespace Glimpse.ApplicationInsights
 
         internal Func<IExecutionTimer> TimerStrategy { get; set; }
 
-        internal IMessageBroker MessageBroker
-        {
-            get { return messageBroker ?? (messageBroker = GlimpseConfiguration.GetConfiguredMessageBroker()); }
-            set { messageBroker = value; }
-        }
-
+        /// <summary>
+        /// Initializes a new instance of the <see cref="GlimpseTelemetryChannel" /> class.
+        /// </summary>
         public GlimpseTelemetryChannel()
         {
-            MessageBroker = GlimpseConfiguration.GetConfiguredMessageBroker();
-            TimerStrategy = GlimpseConfiguration.GetConfiguredTimerStrategy();
+            this.MessageBroker = GlimpseConfiguration.GetConfiguredMessageBroker();
+            this.TimerStrategy = GlimpseConfiguration.GetConfiguredTimerStrategy();
         }
+
         /// <summary>
         /// Gets or sets a value indicating whether developer mode 
         /// of the telemetry transmission is enabled.
@@ -80,9 +78,8 @@ namespace Glimpse.ApplicationInsights
                 }
                 else
                 {
-                    return "";
+                    return string.Empty;
                 }
-
             }
             set
             {
@@ -91,6 +88,15 @@ namespace Glimpse.ApplicationInsights
                     this.ApplicationInsightsChannel.EndpointAddress = value;
                 }
             }
+        }
+
+        /// <summary>
+        /// Gets or sets the messageBroker
+        /// </summary>
+        internal IMessageBroker MessageBroker
+        {
+            get { return this.messageBroker ?? (this.messageBroker = GlimpseConfiguration.GetConfiguredMessageBroker()); }
+            set { this.messageBroker = value; }
         }
 
         /// <summary>
@@ -117,20 +123,20 @@ namespace Glimpse.ApplicationInsights
 
         /// <summary>
         /// Sends telemetry data item to the configured channel if the instrumentation key
-        /// is not empty. Also publiches the telemetry item to the MessageBroker. Filters
+        /// is not empty. Also publishes the telemetry item to the MessageBroker. Filters
         /// out the requests to Glimpse handler.
         /// </summary>
         /// <param name="item">Item to send.</param>
         public void Send(ITelemetry item)
         {
-            var timer = TimerStrategy();
+            var timer = this.TimerStrategy();
 
-            if (item == null || timer == null || MessageBroker == null)
+            if (item == null || timer == null || this.MessageBroker == null)
             {
                 return;
             }
 
-            //Filter the request telemetry to glimpse.axd
+            // Filter the request telemetry to glimpse.axd
             if (item is RequestTelemetry)
             {
                 var request = item as RequestTelemetry;
@@ -148,7 +154,7 @@ namespace Glimpse.ApplicationInsights
                 var dependency = item as DependencyTelemetry;
                 var timelineMessage = new DependencyTelemetryTimelineMessage(dependency);
                 timelineMessage.Offset = timer.Point().Offset.Subtract(dependency.Duration);
-                MessageBroker.Publish(timelineMessage);
+                this.MessageBroker.Publish(timelineMessage);
             }
 
             if (item is TraceTelemetry)
@@ -160,21 +166,25 @@ namespace Glimpse.ApplicationInsights
                     Category = "Application Insights",
                     Message = t.SeverityLevel == null ? t.Message : t.SeverityLevel + ": " + t.Message,
                     FromFirst = timer.Point().Offset,
-                    FromLast = CalculateFromLast(timer),
+                    FromLast = this.CalculateFromLast(timer),
                     IndentLevel = 0
                 };
-                MessageBroker.Publish(model);
+                this.MessageBroker.Publish(model);
             }
 
-            //Filter telemetry with empty instrumentation key
+            // Filter telemetry with empty instrumentation key
             if (!item.Context.InstrumentationKey.ToString().Equals("00000000-0000-0000-0000-000000000000"))
             {
                 this.ApplicationInsightsChannel.Send(item);
             }
 
-            messageBroker.Publish(item);
+            this.messageBroker.Publish(item);
         }
 
+        /// <summary>
+        /// Calculates the elapsed time from the current trace message and the preceding one.
+        /// </summary>
+        /// <param name="timer">Timer that keeps track of the time the executions take. </param>
         private TimeSpan CalculateFromLast(IExecutionTimer timer)
         {
             if (fromLastWatch == null)
@@ -194,6 +204,5 @@ namespace Glimpse.ApplicationInsights
             fromLastWatch = Stopwatch.StartNew();
             return result;
         }
-
     }
 }
