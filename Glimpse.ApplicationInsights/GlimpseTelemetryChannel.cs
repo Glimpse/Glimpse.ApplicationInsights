@@ -140,7 +140,7 @@ namespace Glimpse.ApplicationInsights
             if (item is RequestTelemetry)
             {
                 var request = item as RequestTelemetry;
-                if (request.Url.AbsolutePath != null)
+                if (request.Url != null && request.Url.AbsolutePath != null)
                 {
                     if (request.Url.AbsolutePath.ToLower().EndsWith("glimpse.axd"))
                     {
@@ -173,7 +173,7 @@ namespace Glimpse.ApplicationInsights
             }
 
             // Filter telemetry with empty instrumentation key
-            if (!item.Context.InstrumentationKey.ToString().Equals("00000000-0000-0000-0000-000000000000"))
+            if (item.Context.InstrumentationKey!=null && !item.Context.InstrumentationKey.Equals("00000000-0000-0000-0000-000000000000"))
             {
                 this.ApplicationInsightsChannel.Send(item);
             }
