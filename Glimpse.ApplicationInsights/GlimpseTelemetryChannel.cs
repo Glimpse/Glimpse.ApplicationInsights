@@ -7,53 +7,146 @@ using Glimpse.Core.Framework;
 using Glimpse.Core.Message;
 using Microsoft.ApplicationInsights.Channel;
 using Microsoft.ApplicationInsights.DataContracts;
+using Microsoft.ApplicationInsights.Extensibility;
 
 namespace Glimpse.ApplicationInsights
 {
+    /// <summary>
+    /// Telemetry channel that will send Application Insights telemetry
+    /// to Glimpse message broker and to the Application Insights channel.
+    /// </summary>
     public class GlimpseTelemetryChannel : ITelemetryChannel
     {
         [ThreadStatic]
         private static Stopwatch fromLastWatch;
 
+        /// <summary>
+        /// Gets the channel from ApplicationInsights.config file that
+        /// will send the telemetry to Application Insights.
+        /// </summary>
+        public ITelemetryChannel ApplicationInsightsChannel { get; private set; }
+
         private IMessageBroker messageBroker;
+
         internal Func<IExecutionTimer> TimerStrategy { get; set; }
 
-        internal IMessageBroker MessageBroker
-        {
-            get { return messageBroker ?? (messageBroker = GlimpseConfiguration.GetConfiguredMessageBroker()); }
-            set { messageBroker = value; }
-        }
-
+        /// <summary>
+        /// Initializes a new instance of the <see cref="GlimpseTelemetryChannel" /> class.
+        /// </summary>
         public GlimpseTelemetryChannel()
         {
-            MessageBroker = GlimpseConfiguration.GetConfiguredMessageBroker();
-            TimerStrategy = GlimpseConfiguration.GetConfiguredTimerStrategy();
+            this.MessageBroker = GlimpseConfiguration.GetConfiguredMessageBroker();
+            this.TimerStrategy = GlimpseConfiguration.GetConfiguredTimerStrategy();
         }
 
+        /// <summary>
+        /// Gets or sets a value indicating whether developer mode 
+        /// of the telemetry transmission is enabled.
+        /// </summary>
         public bool? DeveloperMode
         {
-            get;
-            set;
+            get
+            {
+                if (this.ApplicationInsightsChannel != null)
+                {
+                    return this.ApplicationInsightsChannel.DeveloperMode;
+                }
+                else
+                {
+                    return true;
+                }
+            }
+            set
+            {
+                if (this.ApplicationInsightsChannel != null)
+                {
+                    this.ApplicationInsightsChannel.DeveloperMode = value;
+                }
+            }
         }
 
+        /// <summary>
+        /// Gets or sets the HTTP address where the telemetry is sent.
+        /// </summary>
         public string EndpointAddress
         {
-            get;
-            set;
+            get
+            {
+                if (this.ApplicationInsightsChannel != null)
+                {
+                    return this.ApplicationInsightsChannel.EndpointAddress;
+                }
+                else
+                {
+                    return string.Empty;
+                }
+            }
+            set
+            {
+                if (this.ApplicationInsightsChannel != null)
+                {
+                    this.ApplicationInsightsChannel.EndpointAddress = value;
+                }
+            }
         }
 
+        /// <summary>
+        /// Gets or sets the messageBroker
+        /// </summary>
+        internal IMessageBroker MessageBroker
+        {
+            get { return this.messageBroker ?? (this.messageBroker = GlimpseConfiguration.GetConfiguredMessageBroker()); }
+            set { this.messageBroker = value; }
+        }
+
+        /// <summary>
+        /// Flushes the configured telemetry channel.
+        /// </summary>
         public void Flush()
         {
-
+            if (this.ApplicationInsightsChannel != null)
+            {
+                this.ApplicationInsightsChannel.Flush();
+            }
         }
 
+        /// <summary>
+        /// Dispose the channel. Releases unmanaged and - optionally - managed resources.
+        /// </summary>
+        public void Dispose()
+        {
+            if (this.ApplicationInsightsChannel != null)
+            {
+                this.ApplicationInsightsChannel.Dispose();
+            }
+        }
+
+        /// <summary>
+        /// Sends telemetry data item to the configured channel if the instrumentation key
+        /// is not empty. Also publishes the telemetry item to the MessageBroker. Filters
+        /// out the requests to Glimpse handler.
+        /// </summary>
+        /// <param name="item">Item to send.</param>
         public void Send(ITelemetry item)
         {
-            var timer = TimerStrategy();
+            var timer = this.TimerStrategy();
 
-            if (timer == null || MessageBroker == null)
+            if (item == null || timer == null || this.MessageBroker == null)
             {
                 return;
+            }
+
+            // Filter the request telemetry to glimpse.axd
+            if (item is RequestTelemetry)
+            {
+                var request = item as RequestTelemetry;
+                if (request.Url != null && request.Url.AbsolutePath != null)
+                {
+                    if (request.Url.AbsolutePath.ToLower().EndsWith("glimpse.axd"))
+                    {
+                        return;
+                    }
+                }
             }
 
             if (item is DependencyTelemetry)
@@ -61,7 +154,7 @@ namespace Glimpse.ApplicationInsights
                 var dependency = item as DependencyTelemetry;
                 var timelineMessage = new DependencyTelemetryTimelineMessage(dependency);
                 timelineMessage.Offset = timer.Point().Offset.Subtract(dependency.Duration);
-                MessageBroker.Publish(timelineMessage);
+                this.MessageBroker.Publish(timelineMessage);
             }
 
             if (item is TraceTelemetry)
@@ -73,21 +166,25 @@ namespace Glimpse.ApplicationInsights
                     Category = "Application Insights",
                     Message = t.SeverityLevel == null ? t.Message : t.SeverityLevel + ": " + t.Message,
                     FromFirst = timer.Point().Offset,
-                    FromLast = CalculateFromLast(timer),
+                    FromLast = this.CalculateFromLast(timer),
                     IndentLevel = 0
                 };
-
-                MessageBroker.Publish(model);
+                this.MessageBroker.Publish(model);
             }
 
-            messageBroker.Publish(item);
+            // Filter telemetry with empty instrumentation key
+            if (item.Context.InstrumentationKey!=null && !item.Context.InstrumentationKey.Equals("00000000-0000-0000-0000-000000000000"))
+            {
+                this.ApplicationInsightsChannel.Send(item);
+            }
+
+            this.messageBroker.Publish(item);
         }
 
-        public void Dispose()
-        {
-            //do nothing
-        }
-
+        /// <summary>
+        /// Calculates the elapsed time from the current trace message and the preceding one.
+        /// </summary>
+        /// <param name="timer">Timer that keeps track of the time the executions take. </param>
         private TimeSpan CalculateFromLast(IExecutionTimer timer)
         {
             if (fromLastWatch == null)
@@ -107,6 +204,5 @@ namespace Glimpse.ApplicationInsights
             fromLastWatch = Stopwatch.StartNew();
             return result;
         }
-
     }
 }
