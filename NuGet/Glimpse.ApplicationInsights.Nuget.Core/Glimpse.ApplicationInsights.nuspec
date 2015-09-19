@@ -1,0 +1,28 @@
+<?xml version="1.0"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
+  <metadata>
+    <id>Glimpse.Core.ApplicationInsights</id>
+    <version>$version$</version>
+    <title>Glimpse Application Insights</title>
+    <authors>URL Team GT</authors>
+    <owners>URL Team GT</owners>
+    <licenseUrl>http://www.opensource.org/licenses/apache2.0</licenseUrl>
+    <projectUrl>http://getglimpse.com</projectUrl>
+	<iconUrl>http://getglimpse.com/content/glimpse100.png</iconUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>Integration of Glimpse and Application Insights.</description>
+    <releaseNotes>No release yet.</releaseNotes>
+    <copyright>Copyright 2015</copyright>
+    <tags>Glimpse ApplicationInsights diagnostics</tags>
+	<dependencies>
+		<dependency id="Microsoft.ApplicationInsights" version="1.2.0" />
+		<dependency id="Glimpse" version="1.8.6" />
+	</dependencies>
+  </metadata>
+  <files>
+    <file src="..\..\Glimpse.ApplicationInsights\bin\Debug\Glimpse.ApplicationInsights.dll" target="lib\net45" />
+    <file src="..\Transformations\ApplicationInsights.config.transform" target="content" />
+    <file src="..\Transformations\ApplicationInsights.config.install.xdt" target="content" />
+    <file src="..\Transformations\ApplicationInsights.config.uninstall.xdt" target="content" />
+  </files>
+</package>

@@ -1,0 +1,86 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{2E8AA54B-43AD-4093-AF35-2F8095CDAB14}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Glimpse.ApplicationInsights.Nuget.Core</RootNamespace>
+    <AssemblyName>Glimpse.ApplicationInsights.Nuget.Core</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <NuGetPackageImportStamp>61ec3c13</NuGetPackageImportStamp>
+    <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">.\</SolutionDir>
+    <RestorePackages>true</RestorePackages>
+	<PackageVersionFile>..\..\Glimpse.ApplicationInsights\bin\Debug\Glimpse.ApplicationInsights.dll</PackageVersionFile>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+	<PackageSpecFile>$(MSBuildProjectDirectory)\Glimpse.ApplicationInsights.nuspec</PackageSpecFile>
+    <NuGetPackageImportStamp>dad8833d</NuGetPackageImportStamp>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+   <!-- This target runs after build to guarantee that all dependent files have already been copied to output directory. -->
+  <Target Name="BuildNugetPackage" AfterTargets="Build">
+    <Error Condition="!Exists('$(PackageVersionFile)')" Text="PackageVersionFile must be a valid path to a .dll file that defines NuGet package version information."/>
+		<!-- Extract package properties from the .dll file -->
+		<GetFileVersionInfo File="$(PackageVersionFile)">
+		  <Output TaskParameter="VersionInfo" ItemName="VersionInfo" />
+		</GetFileVersionInfo>
+		<PropertyGroup>
+		  <PackageVersion>@(VersionInfo->'%(FileMajorPart)').@(VersionInfo->'%(FileMinorPart)').@(VersionInfo->'%(FileBuildPart)')</PackageVersion>
+		  <PackageVersion Condition="'$(PreReleaseMilestone)' != ''">$(PackageVersion)-$(PreReleaseMilestone)</PackageVersion>
+		  <PackageVersion Condition="'$(StableRelease)' != 'True'">$(PackageVersion)-build@(VersionInfo->'%(FilePrivatePart)')</PackageVersion>
+		  <PackageCopyright>@(VersionInfo->'%(LegalCopyright)')</PackageCopyright>
+		  <PackageCommand>..\..\.nuget\NuGet.exe pack "$(PackageSpecFile)" -Properties "version=$(PackageVersion);"</PackageCommand>
+		</PropertyGroup>
+		
+    <!-- Generate .nupkg file -->
+	<Exec Command="$(PackageCommand)" ConsoleToMSBuild="true">	  
+		<Output TaskParameter="ConsoleOutput" PropertyName="OutputOfExec" />
+	</Exec>  
+  </Target>
+  
+  <UsingTask TaskName="GetFileVersionInfo" TaskFactory="CodeTaskFactory" AssemblyFile="$(MSBuildToolsPath)\Microsoft.Build.Tasks.v12.0.dll">
+    <ParameterGroup>
+      <File ParameterType="System.String" Required="true" />
+      <VersionInfo ParameterType="Microsoft.Build.Framework.ITaskItem" Output="true" />
+    </ParameterGroup>
+    <Task>
+      <Using Namespace="System" />
+      <Using Namespace="System.Diagnostics" />
+      <Using Namespace="Microsoft.Build.Utilities" />
+      <Code Type="Fragment" Language="cs">
+        <![CDATA[
+          FileVersionInfo versionInfo = FileVersionInfo.GetVersionInfo(this.File);
+          this.VersionInfo = new TaskItem(this.File);
+          this.VersionInfo.SetMetadata("Comments", versionInfo.Comments);
+          this.VersionInfo.SetMetadata("CompanyName", versionInfo.CompanyName);
+          this.VersionInfo.SetMetadata("FileMajorPart", versionInfo.FileMajorPart.ToString());          
+          this.VersionInfo.SetMetadata("FileMinorPart", versionInfo.FileMinorPart.ToString());          
+          this.VersionInfo.SetMetadata("FileBuildPart", versionInfo.FileBuildPart.ToString()); 
+          this.VersionInfo.SetMetadata("FilePrivatePart", versionInfo.FilePrivatePart.ToString().PadLeft(5,'0'));         
+          this.VersionInfo.SetMetadata("LegalCopyright", versionInfo.LegalCopyright);
+          this.VersionInfo.SetMetadata("ProductName", versionInfo.ProductName);
+        ]]>
+      </Code>
+    </Task>
+  </UsingTask>
+</Project>
