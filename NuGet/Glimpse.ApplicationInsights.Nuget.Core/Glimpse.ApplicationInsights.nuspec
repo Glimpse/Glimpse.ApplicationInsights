@@ -6,7 +6,7 @@
     <title>Glimpse Application Insights</title>
     <authors>URL Team GT</authors>
     <owners>URL Team GT</owners>
-    <licenseUrl>http://www.opensource.org/licenses/apache2.0</licenseUrl>
+    <licenseUrl>https://github.com/Glimpse/Glimpse.ApplicationInsights/blob/master/LICENSE.txt</licenseUrl>
     <projectUrl>http://getglimpse.com</projectUrl>
 	<iconUrl>http://getglimpse.com/content/glimpse100.png</iconUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
@@ -20,9 +20,9 @@
 	</dependencies>
   </metadata>
   <files>
-    <file src="..\..\Glimpse.ApplicationInsights\bin\Debug\Glimpse.ApplicationInsights.dll" target="lib\net45" />
-    <file src="..\Transformations\ApplicationInsights.config.transform" target="content" />
-    <file src="..\Transformations\ApplicationInsights.config.install.xdt" target="content" />
-    <file src="..\Transformations\ApplicationInsights.config.uninstall.xdt" target="content" />
+     <file src="..\..\Glimpse.ApplicationInsights\bin\$configuration$\Glimpse.ApplicationInsights.dll" target="lib\net45" />
+	 <file src="..\Transformations\ApplicationInsights.config.transform" target="content" />
+	 <file src="..\Transformations\ApplicationInsights.config.install.xdt" target="content" />
+     <file src="..\Transformations\ApplicationInsights.config.uninstall.xdt" target="content" />
   </files>
 </package>
