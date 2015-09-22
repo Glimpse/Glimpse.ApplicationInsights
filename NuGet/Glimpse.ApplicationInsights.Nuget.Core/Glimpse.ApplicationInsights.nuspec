@@ -20,9 +20,9 @@
 	</dependencies>
   </metadata>
   <files>
-     <file src="..\..\Glimpse.ApplicationInsights\bin\$configuration$\Glimpse.ApplicationInsights.dll" target="lib\net45" />
-	 <file src="..\Transformations\ApplicationInsights.config.transform" target="content" />
-	 <file src="..\Transformations\ApplicationInsights.config.install.xdt" target="content" />
-     <file src="..\Transformations\ApplicationInsights.config.uninstall.xdt" target="content" />
+     <file src="Glimpse.ApplicationInsights.dll" target="lib\net45" />
+	 <file src="..\..\..\Nuget\Transformations\ApplicationInsights.config.transform" target="content" />
+	 <file src="..\..\..\Nuget\Transformations\ApplicationInsights.config.install.xdt" target="content" />
+     <file src="..\..\..\Nuget\Transformations\ApplicationInsights.config.uninstall.xdt" target="content" />
   </files>
 </package>

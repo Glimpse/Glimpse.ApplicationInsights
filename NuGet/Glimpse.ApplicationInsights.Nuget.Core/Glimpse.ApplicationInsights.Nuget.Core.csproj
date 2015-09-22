@@ -49,7 +49,7 @@
 		  <PackageVersion Condition="'$(PreReleaseMilestone)' != ''">$(PackageVersion)-$(PreReleaseMilestone)</PackageVersion>
 		  <PackageVersion Condition="'$(StableRelease)' != 'True'">$(PackageVersion)-build@(VersionInfo->'%(FilePrivatePart)')</PackageVersion>
 		  <PackageCopyright>@(VersionInfo->'%(LegalCopyright)')</PackageCopyright>
-		  <PackageCommand>..\..\.nuget\NuGet.exe pack "$(PackageSpecFile)" -Properties "version=$(PackageVersion);configuration=$(Configuration)"</PackageCommand>
+		  <PackageCommand>..\..\.nuget\NuGet.exe pack "$(PackageSpecFile)" -Properties "version=$(PackageVersion);" -BasePath "$(OutputPath) "</PackageCommand>
 		</PropertyGroup>
 		
     <!-- Generate .nupkg file -->
