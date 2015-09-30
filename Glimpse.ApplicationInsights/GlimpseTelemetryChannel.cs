@@ -30,6 +30,13 @@ namespace Glimpse.ApplicationInsights
 
         internal Func<IExecutionTimer> TimerStrategy { get; set; }
 
+        public bool IsItemSent;
+
+        private void SetItemSent(bool bSent)
+        {
+            IsItemSent = bSent;
+        }
+
         /// <summary>
         /// Initializes a new instance of the <see cref="GlimpseTelemetryChannel" /> class.
         /// </summary>
@@ -133,6 +140,7 @@ namespace Glimpse.ApplicationInsights
 
             if (item == null || timer == null || this.MessageBroker == null)
             {
+                this.SetItemSent(false);
                 return;
             }
 
@@ -144,6 +152,7 @@ namespace Glimpse.ApplicationInsights
                 {
                     if (request.Url.AbsolutePath.ToLower().EndsWith("glimpse.axd"))
                     {
+                        this.SetItemSent(false);
                         return;
                     }
                 }
@@ -155,6 +164,7 @@ namespace Glimpse.ApplicationInsights
                 var timelineMessage = new DependencyTelemetryTimelineMessage(dependency);
                 timelineMessage.Offset = timer.Point().Offset.Subtract(dependency.Duration);
                 this.MessageBroker.Publish(timelineMessage);
+                this.SetItemSent(true);
             }
 
             if (item is TraceTelemetry)
@@ -170,15 +180,18 @@ namespace Glimpse.ApplicationInsights
                     IndentLevel = 0
                 };
                 this.MessageBroker.Publish(model);
+                this.SetItemSent(true);
             }
 
             // Filter telemetry with empty instrumentation key
-            if (item.Context.InstrumentationKey!=null && !item.Context.InstrumentationKey.Equals("00000000-0000-0000-0000-000000000000"))
+            if (item.Context.InstrumentationKey != null && !item.Context.InstrumentationKey.Equals("00000000-0000-0000-0000-000000000000"))
             {
                 this.ApplicationInsightsChannel.Send(item);
+                this.SetItemSent(true);
             }
 
             this.messageBroker.Publish(item);
+            this.SetItemSent(true);
         }
 
         /// <summary>
