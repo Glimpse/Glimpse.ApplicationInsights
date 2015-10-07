@@ -8,7 +8,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-	<PackageSpecFile>$(MSBuildProjectDirectory)\Glimpse.ApplicationInsights.nuspec</PackageSpecFile>
+    <PackageSpecFile>$(MSBuildProjectDirectory)\Glimpse.ApplicationInsights.nuspec</PackageSpecFile>
     <NuGetPackageImportStamp>dad8833d</NuGetPackageImportStamp>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
@@ -32,32 +32,32 @@
     <NuGetPackageImportStamp>61ec3c13</NuGetPackageImportStamp>
     <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">.\</SolutionDir>
     <RestorePackages>true</RestorePackages>
-	<PackageVersionFile>$(OutputPath)Glimpse.ApplicationInsights.dll</PackageVersionFile>
+    <PackageVersionFile>$(OutputPath)Glimpse.ApplicationInsights.dll</PackageVersionFile>
   </PropertyGroup>
-  
+  <ItemGroup>
+    <None Include="Glimpse.ApplicationInsights.nuspec" />
+  </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-   <!-- This target runs after build to guarantee that all dependent files have already been copied to output directory. -->
+  <!-- This target runs after build to guarantee that all dependent files have already been copied to output directory. -->
   <Target Name="BuildNugetPackage" AfterTargets="Build">
-    <Error Condition="!Exists('$(PackageVersionFile)')" Text="PackageVersionFile must be a valid path to a .dll file that defines NuGet package version information."/>
-		<!-- Extract package properties from the .dll file -->
-		<GetFileVersionInfo File="$(PackageVersionFile)">
-		  <Output TaskParameter="VersionInfo" ItemName="VersionInfo" />
-		</GetFileVersionInfo>
-		<PropertyGroup>
-		  <PackageVersion>@(VersionInfo->'%(FileMajorPart)').@(VersionInfo->'%(FileMinorPart)').@(VersionInfo->'%(FileBuildPart)')</PackageVersion>
-		  <PackageVersion Condition="'$(PreReleaseMilestone)' != ''">$(PackageVersion)-$(PreReleaseMilestone)</PackageVersion>
-		  <PackageVersion Condition="'$(StableRelease)' != 'True'">$(PackageVersion)-build@(VersionInfo->'%(FilePrivatePart)')</PackageVersion>
-		  <PackageCopyright>@(VersionInfo->'%(LegalCopyright)')</PackageCopyright>
-		  <PackageCommand>..\..\.nuget\NuGet.exe pack "$(PackageSpecFile)" -Properties "version=$(PackageVersion);" -BasePath "$(OutputPath) "</PackageCommand>
-		</PropertyGroup>
-		
+    <Error Condition="!Exists('$(PackageVersionFile)')" Text="PackageVersionFile must be a valid path to a .dll file that defines NuGet package version information." />
+    <!-- Extract package properties from the .dll file -->
+    <GetFileVersionInfo File="$(PackageVersionFile)">
+      <Output TaskParameter="VersionInfo" ItemName="VersionInfo" />
+    </GetFileVersionInfo>
+    <PropertyGroup>
+      <PackageVersion>@(VersionInfo->'%(FileMajorPart)').@(VersionInfo->'%(FileMinorPart)').@(VersionInfo->'%(FileBuildPart)')</PackageVersion>
+      <PackageVersion Condition="'$(PreReleaseMilestone)' != ''">$(PackageVersion)-$(PreReleaseMilestone)</PackageVersion>
+      <PackageVersion Condition="'$(StableRelease)' != 'True'">$(PackageVersion)-build@(VersionInfo->'%(FilePrivatePart)')</PackageVersion>
+      <PackageCopyright>@(VersionInfo->'%(LegalCopyright)')</PackageCopyright>
+      <PackageCommand>..\..\.nuget\NuGet.exe pack "$(PackageSpecFile)" -Properties "version=$(PackageVersion);" -BasePath "$(OutputPath) "</PackageCommand>
+    </PropertyGroup>
     <!-- Generate .nupkg file -->
-	<Exec Command="$(PackageCommand)" ConsoleToMSBuild="true">	  
-		<Output TaskParameter="ConsoleOutput" PropertyName="OutputOfExec" />
-	</Exec>  
+    <Exec Command="$(PackageCommand)" ConsoleToMSBuild="true">
+      <Output TaskParameter="ConsoleOutput" PropertyName="OutputOfExec" />
+    </Exec>
   </Target>
-  
   <UsingTask TaskName="GetFileVersionInfo" TaskFactory="CodeTaskFactory" AssemblyFile="$(MSBuildToolsPath)\Microsoft.Build.Tasks.v12.0.dll">
     <ParameterGroup>
       <File ParameterType="System.String" Required="true" />
@@ -67,8 +67,7 @@
       <Using Namespace="System" />
       <Using Namespace="System.Diagnostics" />
       <Using Namespace="Microsoft.Build.Utilities" />
-      <Code Type="Fragment" Language="cs">
-        <![CDATA[
+      <Code Type="Fragment" Language="cs"><![CDATA[
           FileVersionInfo versionInfo = FileVersionInfo.GetVersionInfo(this.File);
           this.VersionInfo = new TaskItem(this.File);
           this.VersionInfo.SetMetadata("Comments", versionInfo.Comments);
@@ -79,8 +78,7 @@
           this.VersionInfo.SetMetadata("FilePrivatePart", versionInfo.FilePrivatePart.ToString().PadLeft(5,'0'));         
           this.VersionInfo.SetMetadata("LegalCopyright", versionInfo.LegalCopyright);
           this.VersionInfo.SetMetadata("ProductName", versionInfo.ProductName);
-        ]]>
-      </Code>
+        ]]></Code>
     </Task>
   </UsingTask>
 </Project>

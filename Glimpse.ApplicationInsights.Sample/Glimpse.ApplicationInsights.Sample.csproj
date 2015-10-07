@@ -216,8 +216,6 @@
     <Compile Include="App_Start\AppConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
-    <Compile Include="ClientTabSample\ApplicationInsightsProductionDataClientScript.cs" />
-    <Compile Include="ClientTabSample\ApplicationInsightsProductionDataResource.cs" />
     <Compile Include="Controllers\AccountController.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -250,7 +248,6 @@
     <Compile Include="ViewModels\ShoppingCartViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="ClientTabSample\ApplicationInsightsProductionDataScript.js" />
     <Content Include="Images\home-showcase.png" />
     <Content Include="Images\logo.png" />
     <Content Include="Images\logo.svg" />

@@ -4,10 +4,8 @@ using System.Diagnostics;
 using Glimpse.ApplicationInsights.Model;
 using Glimpse.Core.Extensibility;
 using Glimpse.Core.Framework;
-using Glimpse.Core.Message;
 using Microsoft.ApplicationInsights.Channel;
 using Microsoft.ApplicationInsights.DataContracts;
-using Microsoft.ApplicationInsights.Extensibility;
 
 namespace Glimpse.ApplicationInsights
 {
