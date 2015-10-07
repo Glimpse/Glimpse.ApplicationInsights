@@ -35,6 +35,16 @@
     <PackageVersionFile>$(OutputPath)Glimpse.ApplicationInsights.dll</PackageVersionFile>
   </PropertyGroup>
   <ItemGroup>
+    <None Include="..\Transformations\ApplicationInsights.config.install.xdt">
+      <Link>Transformations\ApplicationInsights.config.install.xdt</Link>
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="..\Transformations\ApplicationInsights.config.transform">
+      <Link>Transformations\ApplicationInsights.config.transform</Link>
+    </None>
+    <None Include="..\Transformations\ApplicationInsights.config.uninstall.xdt">
+      <Link>Transformations\ApplicationInsights.config.uninstall.xdt</Link>
+    </None>
     <None Include="Glimpse.ApplicationInsights.nuspec" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />

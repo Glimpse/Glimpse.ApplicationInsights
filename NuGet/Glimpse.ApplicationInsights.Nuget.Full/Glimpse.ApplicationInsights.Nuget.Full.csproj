@@ -8,7 +8,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <PackageSpecFile>$(MSBuildProjectDirectory)\Glimpse.ApplicationInsights.nuspec</PackageSpecFile>
+    <PackageSpecFile>$(MSBuildProjectDirectory)\Glimpse.ApplicationInsights.Full.nuspec</PackageSpecFile>
     <NuGetPackageImportStamp>dad8833d</NuGetPackageImportStamp>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
@@ -35,7 +35,7 @@
     <PackageVersionFile>$(OutputPath)Glimpse.ApplicationInsights.dll</PackageVersionFile>
   </PropertyGroup>
   <ItemGroup>
-    <None Include="Glimpse.ApplicationInsights.nuspec" />
+    <None Include="Glimpse.ApplicationInsights.Full.nuspec" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

@@ -15,15 +15,13 @@
     <copyright>Copyright 2015</copyright>
     <tags>Glimpse ApplicationInsights diagnostics</tags>
     <dependencies>
+      <dependency id="Glimpse" version="1.8.6" />
+      <dependency id="Glimpse.ApplicationInsights" version="$version$" />
+      <dependency id="Glimpse.AspNet" version="1.8.0" />
       <dependency id="Microsoft.ApplicationInsights.Web" version="1.2.1" />
-      <dependency id="Glimpse.Ado" version="1.7.3" />
-      <dependency id="Glimpse.Mvc5" version="1.5.3" />
     </dependencies>
   </metadata>
   <files>
     <file src="Glimpse.ApplicationInsights.dll" target="lib\net45" />
-    <file src="..\..\..\Nuget\Transformations\ApplicationInsights.config.transform" target="content" />
-    <file src="..\..\..\Nuget\Transformations\ApplicationInsights.config.install.xdt" target="content" />
-    <file src="..\..\..\Nuget\Transformations\ApplicationInsights.config.uninstall.xdt" target="content" />
   </files>
 </package>
