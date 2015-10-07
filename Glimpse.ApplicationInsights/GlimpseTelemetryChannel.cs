@@ -158,30 +158,41 @@ namespace Glimpse.ApplicationInsights
                 }
             }
 
-            if (item is DependencyTelemetry)
+             if (item is DependencyTelemetry)
             {
                 var dependency = item as DependencyTelemetry;
                 var timelineMessage = new DependencyTelemetryTimelineMessage(dependency);
                 timelineMessage.Offset = timer.Point().Offset.Subtract(dependency.Duration);
                 this.MessageBroker.Publish(timelineMessage);
-                this.SetItemSent(true);
             }
 
             if (item is TraceTelemetry)
             {
-                TraceTelemetry t = new TraceTelemetry();
-
-                var model = new TraceMessage
-                {
-                    Category = "Application Insights",
-                    Message = t.SeverityLevel == null ? t.Message : t.SeverityLevel + ": " + t.Message,
-                    FromFirst = timer.Point().Offset,
-                    FromLast = this.CalculateFromLast(timer),
-                    IndentLevel = 0
-                };
-                this.MessageBroker.Publish(model);
-                this.SetItemSent(true);
+                var trace = item as TraceTelemetry;
+                var traceMessage = new TraceTelemetryTraceMessage(trace);
+                traceMessage.FromFirst = timer.Point().Offset;
+                traceMessage.FromLast = this.CalculateFromLast(timer);
+                this.MessageBroker.Publish(traceMessage);
             }
+
+            if (item is EventTelemetry)
+            {
+                var eventT = item as EventTelemetry;
+                var eventMessage = new EventTelemetryTraceMessage(eventT);
+                eventMessage.FromFirst = timer.Point().Offset;
+                eventMessage.FromLast = this.CalculateFromLast(timer);
+                this.MessageBroker.Publish(eventMessage);
+            }
+
+            if (item is ExceptionTelemetry)
+            {
+                var trace = item as ExceptionTelemetry;
+                var traceMessage = new ExceptionTelemetryTraceMessage(trace);
+                traceMessage.FromFirst = timer.Point().Offset;
+                traceMessage.FromLast = this.CalculateFromLast(timer);
+                this.MessageBroker.Publish(traceMessage);
+            }
+
 
             // Filter telemetry with empty instrumentation key
             if (item.Context.InstrumentationKey != null && !item.Context.InstrumentationKey.Equals("00000000-0000-0000-0000-000000000000"))

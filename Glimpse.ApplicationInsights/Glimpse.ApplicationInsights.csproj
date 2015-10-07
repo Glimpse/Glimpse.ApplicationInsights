@@ -139,9 +139,11 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ApplicationInsightsTab.cs" />
-    <Compile Include="GlimpseSecurityPolicy.cs" />
     <Compile Include="GlimpseTelemetryChannel.cs" />
     <Compile Include="Model\DependencyTelemetryTimelineMessage.cs" />
+    <Compile Include="Model\ExceptionTelemetryTraceMessage.cs" />
+    <Compile Include="Model\TraceTelemetryTraceMessage.cs" />
+    <Compile Include="Model\EventTelemetryTraceMessage.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

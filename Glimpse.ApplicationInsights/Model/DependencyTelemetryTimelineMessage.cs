@@ -8,6 +8,9 @@ using System.Threading.Tasks;
 
 namespace Glimpse.ApplicationInsights.Model
 {
+    /// <summary>
+    /// Convertion class from Dependency Telemetry to Timeline Message
+    /// </summary>
     public class DependencyTelemetryTimelineMessage : ITimelineMessage
     {
         public DependencyTelemetryTimelineMessage(DependencyTelemetry telemetry)
