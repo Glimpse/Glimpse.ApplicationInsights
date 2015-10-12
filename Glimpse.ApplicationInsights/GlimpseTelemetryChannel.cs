@@ -22,7 +22,7 @@ namespace Glimpse.ApplicationInsights
         /// Gets the channel from ApplicationInsights.config file that
         /// will send the telemetry to Application Insights.
         /// </summary>
-        public ITelemetryChannel ApplicationInsightsChannel { get; private set; }
+        public ITelemetryChannel Channel { get; private set; }
 
         private IMessageBroker messageBroker;
 
@@ -52,9 +52,9 @@ namespace Glimpse.ApplicationInsights
         {
             get
             {
-                if (this.ApplicationInsightsChannel != null)
+                if (this.Channel != null)
                 {
-                    return this.ApplicationInsightsChannel.DeveloperMode;
+                    return this.Channel.DeveloperMode;
                 }
                 else
                 {
@@ -63,9 +63,9 @@ namespace Glimpse.ApplicationInsights
             }
             set
             {
-                if (this.ApplicationInsightsChannel != null)
+                if (this.Channel != null)
                 {
-                    this.ApplicationInsightsChannel.DeveloperMode = value;
+                    this.Channel.DeveloperMode = value;
                 }
             }
         }
@@ -77,9 +77,9 @@ namespace Glimpse.ApplicationInsights
         {
             get
             {
-                if (this.ApplicationInsightsChannel != null)
+                if (this.Channel != null)
                 {
-                    return this.ApplicationInsightsChannel.EndpointAddress;
+                    return this.Channel.EndpointAddress;
                 }
                 else
                 {
@@ -88,9 +88,9 @@ namespace Glimpse.ApplicationInsights
             }
             set
             {
-                if (this.ApplicationInsightsChannel != null)
+                if (this.Channel != null)
                 {
-                    this.ApplicationInsightsChannel.EndpointAddress = value;
+                    this.Channel.EndpointAddress = value;
                 }
             }
         }
@@ -109,9 +109,9 @@ namespace Glimpse.ApplicationInsights
         /// </summary>
         public void Flush()
         {
-            if (this.ApplicationInsightsChannel != null)
+            if (this.Channel != null)
             {
-                this.ApplicationInsightsChannel.Flush();
+                this.Channel.Flush();
             }
         }
 
@@ -120,9 +120,9 @@ namespace Glimpse.ApplicationInsights
         /// </summary>
         public void Dispose()
         {
-            if (this.ApplicationInsightsChannel != null)
+            if (this.Channel != null)
             {
-                this.ApplicationInsightsChannel.Dispose();
+                this.Channel.Dispose();
             }
         }
 
@@ -195,7 +195,7 @@ namespace Glimpse.ApplicationInsights
             // Filter telemetry with empty instrumentation key
             if (item.Context.InstrumentationKey != null && !item.Context.InstrumentationKey.Equals("00000000-0000-0000-0000-000000000000"))
             {
-                this.ApplicationInsightsChannel.Send(item);
+                this.Channel.Send(item);
                 this.SetItemSent(true);
             }
 
