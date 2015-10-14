@@ -1,40 +1,35 @@
-﻿using System;
-using System.Diagnostics;
-
-using Glimpse.ApplicationInsights.Model;
-using Glimpse.Core.Extensibility;
-using Glimpse.Core.Framework;
-using Microsoft.ApplicationInsights.Channel;
-using Microsoft.ApplicationInsights.DataContracts;
-
+﻿//-----------------------------------------------------------------------
+// <copyright file="GlimpseTelemetryChannel.cs" company="Glimpse">
+//     Copyright (c) Glimpse. All rights reserved.
+// </copyright>
+//-----------------------------------------------------------------------
 namespace Glimpse.ApplicationInsights
 {
+    using System;
+    using System.Diagnostics;
+    using Glimpse.ApplicationInsights.Model;
+    using Glimpse.Core.Extensibility;
+    using Glimpse.Core.Framework;
+    using Microsoft.ApplicationInsights.Channel;
+    using Microsoft.ApplicationInsights.DataContracts;
+
     /// <summary>
     /// Telemetry channel that will send Application Insights telemetry
     /// to Glimpse message broker and to the Application Insights channel.
     /// </summary>
     public class GlimpseTelemetryChannel : ITelemetryChannel
     {
+        /// <summary>
+        /// Stopwatch from the last telemetry
+        /// </summary>
         [ThreadStatic]
         private static Stopwatch fromLastWatch;
 
         /// <summary>
-        /// Gets the channel from ApplicationInsights.config file that
-        /// will send the telemetry to Application Insights.
+        /// MessageBroker for subscribing the messages to Glimpse
         /// </summary>
-        public ITelemetryChannel Channel { get; private set; }
-
         private IMessageBroker messageBroker;
-
-        internal Func<IExecutionTimer> TimerStrategy { get; set; }
-
-        public bool IsItemSent;
-
-        private void SetItemSent(bool bSent)
-        {
-            IsItemSent = bSent;
-        }
-
+        
         /// <summary>
         /// Initializes a new instance of the <see cref="GlimpseTelemetryChannel" /> class.
         /// </summary>
@@ -43,6 +38,12 @@ namespace Glimpse.ApplicationInsights
             this.MessageBroker = GlimpseConfiguration.GetConfiguredMessageBroker();
             this.TimerStrategy = GlimpseConfiguration.GetConfiguredTimerStrategy();
         }
+
+        /// <summary>
+        /// Gets the channel from ApplicationInsights.config file that
+        /// will send the telemetry to Application Insights.
+        /// </summary>
+        public ITelemetryChannel Channel { get; private set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether developer mode 
@@ -61,6 +62,7 @@ namespace Glimpse.ApplicationInsights
                     return true;
                 }
             }
+
             set
             {
                 if (this.Channel != null)
@@ -86,6 +88,7 @@ namespace Glimpse.ApplicationInsights
                     return string.Empty;
                 }
             }
+
             set
             {
                 if (this.Channel != null)
@@ -103,6 +106,11 @@ namespace Glimpse.ApplicationInsights
             get { return this.messageBroker ?? (this.messageBroker = GlimpseConfiguration.GetConfiguredMessageBroker()); }
             set { this.messageBroker = value; }
         }
+
+        /// <summary>
+        /// Gets or sets IExecutionTimer
+        /// </summary>
+        internal Func<IExecutionTimer> TimerStrategy { get; set; }
 
         /// <summary>
         /// Flushes the configured telemetry channel.
@@ -138,7 +146,6 @@ namespace Glimpse.ApplicationInsights
 
             if (item == null || timer == null || this.MessageBroker == null)
             {
-                this.SetItemSent(false);
                 return;
             }
 
@@ -150,7 +157,6 @@ namespace Glimpse.ApplicationInsights
                 {
                     if (request.Url.AbsolutePath.ToLower().EndsWith("glimpse.axd"))
                     {
-                        this.SetItemSent(false);
                         return;
                     }
                 }
@@ -191,22 +197,20 @@ namespace Glimpse.ApplicationInsights
                 this.MessageBroker.Publish(traceMessage);
             }
 
-
             // Filter telemetry with empty instrumentation key
             if (item.Context.InstrumentationKey != null && !item.Context.InstrumentationKey.Equals("00000000-0000-0000-0000-000000000000"))
             {
                 this.Channel.Send(item);
-                this.SetItemSent(true);
             }
 
             this.messageBroker.Publish(item);
-            this.SetItemSent(true);
         }
 
-        /// <summary>
-        /// Calculates the elapsed time from the current trace message and the preceding one.
-        /// </summary>
-        /// <param name="timer">Timer that keeps track of the time the executions take. </param>
+       /// <summary>
+       /// Calculates the elapsed time from the current trace message and the preceding one.
+       /// </summary>
+       /// <param name="timer">Timer that keeps track of the time the executions take. </param>
+       /// <returns> Calculate From Last </returns>
         private TimeSpan CalculateFromLast(IExecutionTimer timer)
         {
             if (fromLastWatch == null)

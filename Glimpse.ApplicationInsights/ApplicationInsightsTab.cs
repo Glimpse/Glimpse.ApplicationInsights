@@ -1,20 +1,28 @@
-﻿using Glimpse.Core.Extensibility;
-using Glimpse.Core.Message;
-using Glimpse.Core.Tab.Assist;
-using Glimpse.Core.Extensions;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using Microsoft.ApplicationInsights.Channel;
-
+﻿//-----------------------------------------------------------------------
+// <copyright file="ApplicationInsightsTab.cs" company="Glimpse">
+//     Copyright (c) Glimpse. All rights reserved.
+// </copyright>
+//-----------------------------------------------------------------------
 namespace Glimpse.ApplicationInsights
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Web;
+    using Glimpse.Core.Extensibility;
+    using Glimpse.Core.Extensions;
+    using Glimpse.Core.Message;
+    using Glimpse.Core.Tab.Assist;
+    using Microsoft.ApplicationInsights.Channel;
+    
     /// <summary>
     /// Trace tab
     /// </summary>
     public class ApplicationInsightsTab : ITab, ITabSetup, IDocumentation, /*ITabLayout, */IKey
     {
+        /// <summary>
+        /// sets value to cells.
+        /// </summary>
         private static readonly object Layout = TabLayout.Create()
                 .Row(r =>
                 {

@@ -35,9 +35,7 @@ namespace Glimpse.ApplicationInsights.Test
             ITelemetry RTitem = new RequestTelemetry();
             ITelemetry DTitem = new DependencyTelemetry();
             TestTelemetryChanel.Send(RTitem);
-            Assert.AreEqual(false, TestTelemetryChanel.IsItemSent);
             TestTelemetryChanel.Send(DTitem);
-            Assert.AreEqual(false, TestTelemetryChanel.IsItemSent);
         }
     }
 }
