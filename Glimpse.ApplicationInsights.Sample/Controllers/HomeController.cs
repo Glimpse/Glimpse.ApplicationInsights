@@ -9,6 +9,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Web.Mvc;
 using MvcMusicStore.Models;
+using Microsoft.ApplicationInsights.DataContracts;
 
 namespace MvcMusicStore.Controllers
 {
@@ -27,6 +28,47 @@ namespace MvcMusicStore.Controllers
             // Trigger some good old ADO code 
             var albumCount = GetTotalAlbumns(); 
             Trace.Write(string.Format("Total number of Albums = {0} and Albums with 'The' = {1}", albumCount.Item1, albumCount.Item2));
+
+            var telemetryClient = new Microsoft.ApplicationInsights.TelemetryClient();
+
+            //Sample Trace telemetry
+            TraceTelemetry traceSample = new TraceTelemetry();
+            traceSample.Message = "Slow response - database";
+            traceSample.SeverityLevel = SeverityLevel.Warning;
+            telemetryClient.TrackTrace(traceSample);
+
+            //Sample event telemetry
+            var properties = new Dictionary<string, string> { { "Property 1",string.Format("Album Count {0}" ,albumCount.Item1) } };
+            var measurements = new Dictionary<string, double> { { "Sample Meassurement", albumCount.Item1 } };
+            telemetryClient.TrackEvent("Top Selling Albums", properties, measurements);
+
+            //Sample exception telemetry
+            try
+            {
+                albumCount = null;
+                int count=albumCount.Item1;
+            }
+            catch (Exception ex)
+            {
+                telemetryClient.TrackException(ex, properties, measurements);
+            }
+
+            //Obtains the ip address from the request
+            var request = new RequestTelemetry();
+            request.Url = HttpContext.Request.Url;
+            string ip = HttpContext.Request.ServerVariables["HTTP_X_FORWARDED_FOR"];
+            if (string.IsNullOrEmpty(ip))
+            {
+                ip = HttpContext.Request.UserHostAddress;
+            }
+            else
+            {
+                ip = ip.Split(',').Last().Trim();
+            }
+            request.Success = false;
+            request.Context.Location.Ip = ip;
+            request.Name = "TEST REQUEST " + request.Name;
+            telemetryClient.TrackRequest(request);
 
             return View(albums);
         }

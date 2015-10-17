@@ -35,7 +35,6 @@ namespace Glimpse.ApplicationInsights
         /// <summary>
         /// Gets the name that will show in the tab.
         /// </summary>
-        /// <value>The name.</value>
         public string Name
         {
             get { return "Application Insights"; }
@@ -44,7 +43,6 @@ namespace Glimpse.ApplicationInsights
         /// <summary>
         /// Gets the documentation URI.
         /// </summary>
-        /// <value>The documentation URI.</value>
         public string DocumentationUri
         {
             get { return "http://getglimpse.com/Help/Trace-Tab"; }
@@ -53,7 +51,6 @@ namespace Glimpse.ApplicationInsights
         /// <summary>
         /// Gets when the <see cref="ITab.GetData" /> method should run.
         /// </summary>
-        /// <value>The execute on.</value>
         public RuntimeEvent ExecuteOn
         {
             get { return RuntimeEvent.EndRequest; }
@@ -63,7 +60,6 @@ namespace Glimpse.ApplicationInsights
         /// Gets the type of the request context that the Tab relies on. If
         /// returns null, the tab can be used in any context.
         /// </summary>
-        /// <value>The type of the request context.</value>
         public Type RequestContextType
         {
             get { return null; }
@@ -72,7 +68,6 @@ namespace Glimpse.ApplicationInsights
         /// <summary>
         /// Gets the key.
         /// </summary>
-        /// <value>The key. Only valid JavaScript identifiers should be used for future compatibility.</value>
         public string Key
         {
             get { return "glimpse_ai"; }
