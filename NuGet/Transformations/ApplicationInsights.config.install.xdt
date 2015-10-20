@@ -1,7 +1,7 @@
 <ApplicationInsights xmlns="http://schemas.microsoft.com/ApplicationInsights/2013/Settings" xmlns:xdt="http://schemas.microsoft.com/XML-Document-Transform">
   <TelemetryChannel xdt:Transform="Remove" />
   <TelemetryChannel xdt:Transform="Insert" Type="Glimpse.ApplicationInsights.GlimpseTelemetryChannel, Glimpse.ApplicationInsights">
-    <ApplicationInsightsChannel Type="Microsoft.ApplicationInsights.WindowsServer.TelemetryChannel.ServerTelemetryChannel, Microsoft.AI.ServerTelemetryChannel"/>
+    <Channel Type="Microsoft.ApplicationInsights.WindowsServer.TelemetryChannel.ServerTelemetryChannel, Microsoft.AI.ServerTelemetryChannel"/>
   </TelemetryChannel>
 
   <InstrumentationKey  xdt:Transform="InsertIfMissing">00000000-0000-0000-0000-000000000000</InstrumentationKey>

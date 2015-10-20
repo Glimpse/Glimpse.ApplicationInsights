@@ -1,5 +1,5 @@
 ﻿//-----------------------------------------------------------------------
-// <copyright file="DependencyTelemetryTimelineMessage.cs" company="Glimpse">
+// <copyright file="EventTelemetryTimelineMessage.cs" company="Glimpse">
 //     Copyright (c) Glimpse. All rights reserved.
 // </copyright>
 //-----------------------------------------------------------------------
@@ -12,31 +12,21 @@ namespace Glimpse.ApplicationInsights.Model
     using System.Threading.Tasks;
     using Glimpse.Core.Message;
     using Microsoft.ApplicationInsights.DataContracts;
-
+    
     /// <summary>
-    /// Convert class from Dependency Telemetry to Timeline Message
-    /// </summary>
-    public class DependencyTelemetryTimelineMessage : ITimelineMessage
+    /// Convert class from Event Telemetry to Timeline Message
+    /// </summary> 
+    public class EventTelemetryTimelineMessage : ITimelineMessage
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="DependencyTelemetryTimelineMessage"/> class.
+        /// Initializes a new instance of the <see cref="EventTelemetryTimelineMessage"/> class.
         /// </summary>
         /// <param name="telemetry">object telemetry</param>
-        public DependencyTelemetryTimelineMessage(DependencyTelemetry telemetry)
+        public EventTelemetryTimelineMessage(EventTelemetry telemetry)
         {
-            this.EventName = telemetry.DependencyKind + ": " + telemetry.Name.Split('|')[0];
-            if (telemetry.Success.HasValue ? telemetry.Success.Value : false)
-            {
-                this.EventCategory = new TimelineCategoryItem("Application Insights", "red", "orange");
-            }
-            else 
-            {
-                this.EventCategory = new TimelineCategoryItem("Application Insights Unsuccessful", "DarkRed", "orange");
-            }
-
-            this.EventSubText = telemetry.Name;
-            this.Duration = telemetry.Duration;
-            this.StartTime = telemetry.StartTime.DateTime;
+            this.EventName = telemetry.Name;
+            this.EventCategory = new TimelineCategoryItem("Application Insights", "red", "orange");
+            this.EventSubText = "Device ID: " + telemetry.Context.Device.Id;
         }
 
         /// <summary>
