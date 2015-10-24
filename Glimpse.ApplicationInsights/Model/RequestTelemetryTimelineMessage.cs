@@ -27,15 +27,15 @@ namespace Glimpse.ApplicationInsights.Model
             this.EventName = telemetry.Name;
             if (telemetry.Success) 
             {
-                this.EventCategory = new TimelineCategoryItem("Application Insights", "red", "orange");
+                this.EventCategory = new TimelineCategoryItem("Application Insights", "green", "yellow");
             }
             else
             {
-                this.EventCategory = new TimelineCategoryItem("Application Insights Unsuccessful", "DarkRed", "orange");
+                this.EventCategory = new TimelineCategoryItem("Application Insights Unsuccessful", "red", "orange");
             }
 
-            this.EventSubText = "Response Code: " + telemetry.ResponseCode + "; Succesful Request: " + telemetry.Success +
-                "; Request URL: " + telemetry.Url + "; Device ID: " + telemetry.Context.Device.Id;
+            this.EventSubText = "Response Code: " + telemetry.ResponseCode + "<br> Succesful Request: " + telemetry.Success +
+                "<br> Request URL: " + telemetry.Url + "<br> Device ID: " + telemetry.Context.Device.Id;
             this.Duration = telemetry.Duration;
             this.StartTime = telemetry.StartTime.DateTime;
         }

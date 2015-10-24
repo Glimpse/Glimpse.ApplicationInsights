@@ -56,17 +56,8 @@ namespace MvcMusicStore.Controllers
             //Obtains the ip address from the request
             var request = new RequestTelemetry();
             request.Url = HttpContext.Request.Url;
-            string ip = HttpContext.Request.ServerVariables["HTTP_X_FORWARDED_FOR"];
-            if (string.IsNullOrEmpty(ip))
-            {
-                ip = HttpContext.Request.UserHostAddress;
-            }
-            else
-            {
-                ip = ip.Split(',').Last().Trim();
-            }
+            request.Duration = System.TimeSpan.FromMilliseconds(100);
             request.Success = false;
-            request.Context.Location.Ip = ip;
             request.Name = "TEST REQUEST " + request.Name;
             telemetryClient.TrackRequest(request);
 

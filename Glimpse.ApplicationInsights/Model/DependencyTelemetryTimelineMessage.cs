@@ -27,11 +27,11 @@ namespace Glimpse.ApplicationInsights.Model
             this.EventName = telemetry.DependencyKind + ": " + telemetry.Name.Split('|')[0];
             if (telemetry.Success.HasValue ? telemetry.Success.Value : false)
             {
-                this.EventCategory = new TimelineCategoryItem("Application Insights", "red", "orange");
+                this.EventCategory = new TimelineCategoryItem("Application Insights", "green", "yellow");
             }
             else 
             {
-                this.EventCategory = new TimelineCategoryItem("Application Insights Unsuccessful", "DarkRed", "orange");
+                this.EventCategory = new TimelineCategoryItem("Application Insights Unsuccessful", "red", "orange");
             }
 
             this.EventSubText = telemetry.Name;

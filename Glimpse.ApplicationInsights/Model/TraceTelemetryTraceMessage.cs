@@ -24,7 +24,7 @@ namespace Glimpse.ApplicationInsights.Model
         /// <param name="telemetry">Telemetry item to be converted. </param>
         public TraceTelemetryTraceMessage(TraceTelemetry telemetry)
         {
-            this.Category = telemetry.SeverityLevel == null ? "--" : telemetry.SeverityLevel.ToString();
+            this.Category = telemetry.SeverityLevel == null ? "--" : SeverityToGlimpseCategory.SeverityToCategory((SeverityLevel)telemetry.SeverityLevel);
             this.Message = telemetry.Message;
             this.IndentLevel = 0;
         }
