@@ -25,7 +25,7 @@ namespace Glimpse.ApplicationInsights.Model
         public EventTelemetryTimelineMessage(EventTelemetry telemetry)
         {
             this.EventName = telemetry.Name;
-            this.EventCategory = new TimelineCategoryItem("Application Insights", "red", "orange");
+            this.EventCategory = new TimelineCategoryItem("Application Insights", "green", "yellow");
             this.EventSubText = "Device ID: " + telemetry.Context.Device.Id;
         }
 

@@ -25,8 +25,8 @@ namespace Glimpse.ApplicationInsights.Model
         public ExceptionTelemetryTimelineMessage(ExceptionTelemetry telemetry)
         {
             this.EventName = telemetry.Exception.Message;
-            this.EventCategory = new TimelineCategoryItem("Application Insights", "red", "orange");
-            this.EventSubText = "Exception of type: " + telemetry.Exception.Message + " happened in the method: " + telemetry.Exception.Source;
+            this.EventCategory = new TimelineCategoryItem("Application Insights", "green", "yellow");
+            this.EventSubText = "Exception of type: " + telemetry.Exception.Message + "<br> Happened in: " + telemetry.Exception.StackTrace;
         }
 
         /// <summary>
