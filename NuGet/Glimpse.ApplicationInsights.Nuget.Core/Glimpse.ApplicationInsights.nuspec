@@ -20,6 +20,7 @@
     </dependencies>
   </metadata>
   <files>
+	<file src="..\..\..\Nuget\tools\*.*" target="tools" />
     <file src="Glimpse.ApplicationInsights.dll" target="lib\net45" />
     <file src="..\..\..\Nuget\Transformations\ApplicationInsights.config.transform" target="content" />
     <file src="..\..\..\Nuget\Transformations\ApplicationInsights.config.install.xdt" target="content" />
