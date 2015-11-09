@@ -14,11 +14,12 @@ namespace Glimpse.ApplicationInsights
     using Glimpse.Core.Message;
     using Glimpse.Core.Tab.Assist;
     using Microsoft.ApplicationInsights.Channel;
+    using Microsoft.ApplicationInsights.DataContracts;
     
     /// <summary>
     /// Trace tab
     /// </summary>
-    public class ApplicationInsightsTab : ITab, ITabSetup, IDocumentation, /*ITabLayout, */IKey
+    public class ApplicationInsightsTab : ITab, ITabSetup, IDocumentation, ITabLayout, IKey
     {
         /// <summary>
         /// sets value to cells.
@@ -26,10 +27,12 @@ namespace Glimpse.ApplicationInsights
         private static readonly object Layout = TabLayout.Create()
                 .Row(r =>
                 {
-                    r.Cell(0).AsKey().WidthInPixels(100);
-                    r.Cell(1);
-                    r.Cell(2).WidthInPercent(15).Suffix(" ms").AlignRight().Prefix("T+ ").Class("mono");
-                    r.Cell(3).WidthInPercent(15).Suffix(" ms").AlignRight().Class("mono");
+                    r.Cell("time").WithTitle("Time");
+                    r.Cell("name").WithTitle("Name");
+                    r.Cell("details").WithTitle("Details");
+                    r.Cell("properties").WithTitle("Custom properties");
+                    r.Cell("type").WithTitle("Type");
+                    r.Cell("context").WithTitle("Context");
                 }).Build();
 
         /// <summary>
@@ -72,8 +75,7 @@ namespace Glimpse.ApplicationInsights
         {
             get { return "glimpse_ai"; }
         }
-
-        /*
+        
         /// <summary>
         /// Gets the layout which controls the layout.
         /// </summary>
@@ -82,8 +84,7 @@ namespace Glimpse.ApplicationInsights
         {
             return Layout;
         }
-        */
-
+        
         /// <summary>
         /// Gets the data that should be shown in the UI.
         /// </summary>
@@ -91,7 +92,82 @@ namespace Glimpse.ApplicationInsights
         /// <returns>Object that will be shown.</returns>
         public object GetData(ITabContext context)
         {
-            var data = context.GetMessages<ITelemetry>();
+            var data = new List<object>(); 
+            var telemetryMessages = context.GetMessages<ITelemetry>();
+            foreach (var telemetry in telemetryMessages)
+            {
+                if (telemetry is TraceTelemetry)
+                {
+                    var trace = telemetry as TraceTelemetry;
+                    data.Add(new
+                        {
+                            time = trace.Timestamp.DateTime,
+                            name = trace.Message,
+                            details = trace.Sequence,
+                            properties = trace.Properties,
+                            type = "Trace",
+                            context = trace.Context
+                        });
+                }
+
+                if (telemetry is DependencyTelemetry) 
+                {
+                    var dependency = telemetry as DependencyTelemetry;
+                    data.Add(new
+                        {
+                            time = dependency.Timestamp.DateTime,
+                            name = dependency.DependencyKind + ": " + dependency.Name.Split('|')[0],
+                            details = dependency.Name,
+                            properties = dependency.Properties,
+                            type = "Dependency",
+                            context = dependency.Context
+                        });
+                }
+
+                if (telemetry is EventTelemetry)
+                {
+                    var tevent = telemetry as EventTelemetry;
+                    data.Add(new
+                        {
+                            time = tevent.Timestamp.DateTime,
+                            name = tevent.Name,
+                            details = "Device ID: " + telemetry.Context.Device.Id,
+                            properties = tevent.Properties,
+                            type = "Event",
+                            context = tevent.Context
+                        });
+                }
+
+                if (telemetry is ExceptionTelemetry)
+                {
+                    var exception = telemetry as ExceptionTelemetry;
+                    data.Add(new
+                        {
+                            time = exception.Timestamp.DateTime,
+                            name = exception.Exception.Message,
+                            details = "Exception of type: " + exception.Exception.Message + "\n\r Happened in: " + exception.Exception.StackTrace,
+                            properties = exception.Properties,
+                            type = "Exception",
+                            context = exception.Context
+                        });
+                }
+
+                if (telemetry is RequestTelemetry)
+                {
+                    var request = telemetry as RequestTelemetry;
+                    data.Add(new
+                        {
+                            time = request.Timestamp.DateTime,
+                            name = request.Name,
+                            details = "Response Code: " + request.ResponseCode + "\n\r Succesful Request: " + request.Success +
+                            "\n\r Request URL: " + request.Url + "\n\r Device ID: " + request.Context.Device.Id,
+                            properties = request.Properties,
+                            type = "Request",
+                            context = request.Context
+                        });
+                }
+            }
+
             return data;
         }
 
