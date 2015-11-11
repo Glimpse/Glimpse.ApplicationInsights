@@ -37,6 +37,12 @@
   <ItemGroup>
     <None Include="Glimpse.ApplicationInsights.Full.nuspec" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\Glimpse.ApplicationInsights\Glimpse.ApplicationInsights.csproj">
+      <Project>{a4e8a925-a40e-41be-a6f0-cb1798082f60}</Project>
+      <Name>Glimpse.ApplicationInsights</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- This target runs after build to guarantee that all dependent files have already been copied to output directory. -->

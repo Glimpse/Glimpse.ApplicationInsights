@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2013
-VisualStudioVersion = 12.0.31101.0
+VisualStudioVersion = 12.0.40629.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Glimpse.ApplicationInsights", "Glimpse.ApplicationInsights\Glimpse.ApplicationInsights.csproj", "{A4E8A925-A40E-41BE-A6F0-CB1798082F60}"
 EndProject
@@ -12,6 +12,11 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Glimpse.ApplicationInsights.Nuget.Core", "NuGet\Glimpse.ApplicationInsights.Nuget.Core\Glimpse.ApplicationInsights.Nuget.Core.csproj", "{2E8AA54B-43AD-4093-AF35-2F8095CDAB14}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Glimpse.ApplicationInsights.Nuget.Full", "NuGet\Glimpse.ApplicationInsights.Nuget.Full\Glimpse.ApplicationInsights.Nuget.Full.csproj", "{E3E379DF-F4C6-4180-9B81-6769533ABE47}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{B370D3C7-BC5A-4C94-B7F7-6EC30D11798C}"
+	ProjectSection(SolutionItems) = preProject
+		NuGet.config = NuGet.config
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
