@@ -8,7 +8,6 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <PackageSpecFile>$(MSBuildProjectDirectory)\Glimpse.ApplicationInsights.nuspec</PackageSpecFile>
     <NuGetPackageImportStamp>dad8833d</NuGetPackageImportStamp>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
@@ -20,6 +19,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup>
+    <PackageSpecFile>$(MSBuildProjectDirectory)\Glimpse.ApplicationInsights.nuspec</PackageSpecFile>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{2E8AA54B-43AD-4093-AF35-2F8095CDAB14}</ProjectGuid>
