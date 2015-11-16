@@ -13,8 +13,10 @@ namespace Glimpse.ApplicationInsights
     using Glimpse.Core.Extensions;
     using Glimpse.Core.Message;
     using Glimpse.Core.Tab.Assist;
+    using Microsoft.ApplicationInsights;
     using Microsoft.ApplicationInsights.Channel;
     using Microsoft.ApplicationInsights.DataContracts;
+    using Microsoft.ApplicationInsights.Extensibility;
     
     /// <summary>
     /// Trace tab
@@ -92,7 +94,34 @@ namespace Glimpse.ApplicationInsights
         /// <returns>Object that will be shown.</returns>
         public object GetData(ITabContext context)
         {
-            var data = new List<object>(); 
+            var data = new List<object>();
+
+            // This is a temporary fix that allows to show request telemetry object inside Application Insights tab
+            // The issue here is that ApplicationInsights's End callback that produces request telemetry object will be called after 
+            // Glimpse's EndRequest method that will populate all request details. See github issue #17 for details:
+            // https://github.com/Glimpse/Glimpse.ApplicationInsights/issues/17
+            // Long term we might need to switch Application Insights tab from showing request-specific telemetry to show all telemetry
+            // like history tab does with the ability to 
+            var requestTelemetry = System.Web.HttpContext.Current.Items["Microsoft.ApplicationInsights.RequestTelemetry"] as RequestTelemetry;
+            if (requestTelemetry != null)
+            {
+                foreach (var initializer in TelemetryConfiguration.Active.TelemetryInitializers)
+                {
+                    initializer.Initialize(requestTelemetry);
+                }
+   
+                data.Add(new
+                {
+                    time = requestTelemetry.Timestamp.DateTime,
+                    name = "Unfinished: " + requestTelemetry.Name,
+                    details = "Response Code: " + requestTelemetry.ResponseCode + "\n\r Succesful Request: " + requestTelemetry.Success +
+                    "\n\r Request URL: " + requestTelemetry.Url + "\n\r Device ID: " + requestTelemetry.Context.Device.Id,
+                    properties = requestTelemetry.Properties,
+                    type = "Request",
+                    context = requestTelemetry.Context
+                });
+            }
+
             var telemetryMessages = context.GetMessages<ITelemetry>();
             foreach (var telemetry in telemetryMessages)
             {
