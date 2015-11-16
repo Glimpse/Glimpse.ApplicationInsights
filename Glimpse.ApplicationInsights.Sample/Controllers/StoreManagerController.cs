@@ -1,7 +1,10 @@
 ﻿using System.Data.Entity;
 using System.Linq;
 using System.Web.Mvc;
+using System.Diagnostics;
 using MvcMusicStore.Models;
+using System.Threading.Tasks;
+using System.Collections.Generic;
 
 namespace MvcMusicStore.Controllers
 {
@@ -40,6 +43,7 @@ namespace MvcMusicStore.Controllers
         {
             ViewBag.GenreId = new SelectList(db.Genres, "GenreId", "Name");
             ViewBag.ArtistId = new SelectList(db.Artists, "ArtistId", "Name");
+            
             return View();
         }
 
@@ -58,6 +62,7 @@ namespace MvcMusicStore.Controllers
 
             ViewBag.GenreId = new SelectList(db.Genres, "GenreId", "Name", album.GenreId);
             ViewBag.ArtistId = new SelectList(db.Artists, "ArtistId", "Name", album.ArtistId);
+
             return View(album);
         }
 
@@ -123,5 +128,6 @@ namespace MvcMusicStore.Controllers
             db.Dispose();
             base.Dispose(disposing);
         }
+        
     }
 }

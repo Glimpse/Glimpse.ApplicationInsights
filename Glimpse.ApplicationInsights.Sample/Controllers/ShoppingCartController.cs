@@ -2,6 +2,8 @@
 using System.Web.Mvc;
 using MvcMusicStore.Models;
 using MvcMusicStore.ViewModels;
+using System.Diagnostics;
+using Microsoft.ApplicationInsights.DataContracts;
 
 namespace MvcMusicStore.Controllers
 {
@@ -14,6 +16,8 @@ namespace MvcMusicStore.Controllers
 
         public ActionResult Index()
         {
+            var telemetryClient = new Microsoft.ApplicationInsights.TelemetryClient();
+
             var cart = ShoppingCart.GetCart(storeDB, this.HttpContext);
 
             // Set up our ViewModel
@@ -22,6 +26,17 @@ namespace MvcMusicStore.Controllers
                 CartItems = cart.GetCartItems(),
                 CartTotal = cart.GetTotal()
             };
+
+            foreach (var item in viewModel.CartItems)
+            {
+                Trace.Write("Cart item: " + item.AlbumId);
+            }
+            
+            //Sample Trace Telemetry
+            TraceTelemetry sampleTelemetry = new TraceTelemetry();
+            sampleTelemetry.Message = "Normal response- Database";
+            sampleTelemetry.SeverityLevel = SeverityLevel.Information;
+            telemetryClient.TrackTrace(sampleTelemetry);
 
             // Return the view
             return View(viewModel);
