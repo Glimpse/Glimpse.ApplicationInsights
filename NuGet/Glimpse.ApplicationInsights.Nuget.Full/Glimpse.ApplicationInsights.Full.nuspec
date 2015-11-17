@@ -3,17 +3,18 @@
   <metadata>
     <id>Glimpse.ApplicationInsights.Full</id>
     <version>$version$</version>
-    <title>Glimpse Application Insights</title>
-    <authors>URL Team GT</authors>
-    <owners>URL Team GT</owners>
+    <title>Glimpse Application Insights for Web Applications</title>
+    <authors>SergeyKanzhelev</authors>
+    <owners>SergeyKanzhelev</owners>
     <licenseUrl>https://github.com/Glimpse/Glimpse.ApplicationInsights/blob/master/LICENSE.txt</licenseUrl>
     <projectUrl>http://getglimpse.com</projectUrl>
-    <iconUrl>http://getglimpse.com/content/glimpse100.png</iconUrl>
+    <iconUrl>http://appanacdn.blob.core.windows.net/cdn/icons/aic.png</iconUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
-    <description>Integration of Glimpse and Application Insights.</description>
-    <releaseNotes>No release yet.</releaseNotes>
+    <description>This package integrates Application Insights with Glimpse for .NET web applications. Glimpse is a web debugging and diagnostics tool used to gain a better understanding of whats happening inside of your ASP.NET 3.5+ application. Applications Insights is a service that allows developers to monitor performance, availability, and usage of their applications.</description>
+    <releaseNotes>First release.</releaseNotes>
     <copyright>Copyright 2015</copyright>
     <tags>Glimpse ApplicationInsights diagnostics</tags>
+    <summary>Integration of Glimpse and Application Insights for .NET web appications</summary>
     <dependencies>
       <dependency id="Glimpse" version="1.8.6" />
       <dependency id="Glimpse.AspNet" version="1.8.0" />
