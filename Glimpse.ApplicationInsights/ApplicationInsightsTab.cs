@@ -50,7 +50,7 @@ namespace Glimpse.ApplicationInsights
         /// </summary>
         public string DocumentationUri
         {
-            get { return "http://getglimpse.com/Help/Trace-Tab"; }
+            get { return "https://github.com/Glimpse/Glimpse.ApplicationInsights/wiki/Application-Insights-Tab"; }
         }
 
         /// <summary>
