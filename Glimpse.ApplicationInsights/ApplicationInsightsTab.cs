@@ -7,6 +7,7 @@ namespace Glimpse.ApplicationInsights
 {
     using System;
     using System.Collections.Generic;
+    using System.Globalization;
     using System.Linq;
     using System.Web;
     using Glimpse.Core.Extensibility;
@@ -96,32 +97,6 @@ namespace Glimpse.ApplicationInsights
         {
             var data = new List<object>();
 
-            // This is a temporary fix that allows to show request telemetry object inside Application Insights tab
-            // The issue here is that ApplicationInsights's End callback that produces request telemetry object will be called after 
-            // Glimpse's EndRequest method that will populate all request details. See github issue #17 for details:
-            // https://github.com/Glimpse/Glimpse.ApplicationInsights/issues/17
-            // Long term we might need to switch Application Insights tab from showing request-specific telemetry to show all telemetry
-            // like history tab does with the ability to 
-            var requestTelemetry = System.Web.HttpContext.Current.Items["Microsoft.ApplicationInsights.RequestTelemetry"] as RequestTelemetry;
-            if (requestTelemetry != null)
-            {
-                foreach (var initializer in TelemetryConfiguration.Active.TelemetryInitializers)
-                {
-                    initializer.Initialize(requestTelemetry);
-                }
-   
-                data.Add(new
-                {
-                    time = requestTelemetry.Timestamp.DateTime,
-                    name = "Unfinished: " + requestTelemetry.Name,
-                    details = "Response Code: " + requestTelemetry.ResponseCode + "\n\r Succesful Request: " + requestTelemetry.Success +
-                    "\n\r Request URL: " + requestTelemetry.Url + "\n\r Device ID: " + requestTelemetry.Context.Device.Id,
-                    properties = requestTelemetry.Properties,
-                    type = "Request",
-                    context = requestTelemetry.Context
-                });
-            }
-
             var telemetryMessages = context.GetMessages<ITelemetry>();
             foreach (var telemetry in telemetryMessages)
             {
@@ -160,7 +135,7 @@ namespace Glimpse.ApplicationInsights
                         {
                             time = tevent.Timestamp.DateTime,
                             name = tevent.Name,
-                            details = "Device ID: " + telemetry.Context.Device.Id,
+                            details = "Role Instance ID: " + telemetry.Context.Device.RoleInstance,
                             properties = tevent.Properties,
                             type = "Event",
                             context = tevent.Context
@@ -189,12 +164,49 @@ namespace Glimpse.ApplicationInsights
                             time = request.Timestamp.DateTime,
                             name = request.Name,
                             details = "Response Code: " + request.ResponseCode + "\n\r Succesful Request: " + request.Success +
-                            "\n\r Request URL: " + request.Url + "\n\r Device ID: " + request.Context.Device.Id,
+                            "\n\r Request URL: " + request.Url + "\n\r Role instance: " + request.Context.Device.RoleInstance,
                             properties = request.Properties,
                             type = "Request",
                             context = request.Context
                         });
                 }
+            }
+
+            // This is a temporary fix that allows to show request telemetry object inside Application Insights tab
+            // The issue here is that ApplicationInsights's End callback that produces request telemetry object will be called after 
+            // Glimpse's EndRequest method that will populate all request details. See github issue #17 for details:
+            // https://github.com/Glimpse/Glimpse.ApplicationInsights/issues/17
+            // Long term we might need to switch Application Insights tab from showing request-specific telemetry to show all telemetry
+            // like history tab does with the ability to 
+            var requestTelemetry = System.Web.HttpContext.Current.Items["Microsoft.ApplicationInsights.RequestTelemetry"] as RequestTelemetry;
+            if (requestTelemetry != null)
+            {
+                HttpContext ctx = HttpContext.Current;
+                if (ctx != null)
+                {
+                    requestTelemetry.ResponseCode = ctx.Response.StatusCode.ToString(CultureInfo.InvariantCulture);
+                    requestTelemetry.Success =
+                        (ctx.Response.StatusCode < 400) ||
+                        (ctx.Response.StatusCode == 401);
+                    requestTelemetry.Url = ctx.Request.Unvalidated.Url;
+                    requestTelemetry.HttpMethod = ctx.Request.HttpMethod;
+                }
+
+                foreach (var initializer in TelemetryConfiguration.Active.TelemetryInitializers)
+                {
+                    initializer.Initialize(requestTelemetry);
+                }
+
+                data.Add(new
+                {
+                    time = requestTelemetry.Timestamp.DateTime,
+                    name = requestTelemetry.Name,
+                    details = "Response Code: " + requestTelemetry.ResponseCode + "\n\r Succesful Request: " + requestTelemetry.Success +
+                    "\n\r Request URL: " + requestTelemetry.Url + "\n\r Role instance: " + requestTelemetry.Context.Device.RoleInstance,
+                    properties = requestTelemetry.Properties,
+                    type = "Request",
+                    context = requestTelemetry.Context
+                });
             }
 
             return data;
