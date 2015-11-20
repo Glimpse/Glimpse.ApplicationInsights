@@ -10,6 +10,7 @@ using Microsoft.Web.WebPages.OAuth;
 using WebMatrix.WebData;
 using MvcMusicStore.Filters;
 using MvcMusicStore.Models;
+using Microsoft.ApplicationInsights.DataContracts;
 
 namespace MvcMusicStore.Controllers
 {
@@ -35,13 +36,27 @@ namespace MvcMusicStore.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Login(LoginModel model, string returnUrl)
         {
+            var telemetryClient = new Microsoft.ApplicationInsights.TelemetryClient();
+            TraceTelemetry traceSample = new TraceTelemetry();
+
             if (ModelState.IsValid && WebSecurity.Login(
                 model.UserName, model.Password, persistCookie: model.RememberMe))
             {
                 // Migrate the user's shopping cart
                 MigrateShoppingCart(model.UserName);
+                
+                //Sample Trace telemetry
+                traceSample.Message = "Login succesfull";
+                traceSample.SeverityLevel = SeverityLevel.Information;
+                telemetryClient.TrackTrace(traceSample);
+
                 return RedirectToLocal(returnUrl);
             }
+
+            //Sample Trace telemetry
+            traceSample.Message = "Login failed";
+            traceSample.SeverityLevel = SeverityLevel.Information;
+            telemetryClient.TrackTrace(traceSample);
 
             // If we got this far, something failed, redisplay form
             ModelState.AddModelError("", "The user name or password provided is incorrect.");
@@ -69,6 +84,14 @@ namespace MvcMusicStore.Controllers
         {
             WebSecurity.Logout();
 
+            var telemetryClient = new Microsoft.ApplicationInsights.TelemetryClient();
+
+            //Sample Trace telemetry
+            TraceTelemetry traceSample = new TraceTelemetry();
+            traceSample.Message = "Logged off";
+            traceSample.SeverityLevel = SeverityLevel.Information;
+            telemetryClient.TrackTrace(traceSample);
+
             return RedirectToAction("Index", "Home");
         }
 
@@ -78,6 +101,14 @@ namespace MvcMusicStore.Controllers
         [AllowAnonymous]
         public ActionResult Register()
         {
+            var telemetryClient = new Microsoft.ApplicationInsights.TelemetryClient();
+
+            //Sample Trace telemetry
+            TraceTelemetry traceSample = new TraceTelemetry();
+            traceSample.Message = "Database response - normal";
+            traceSample.SeverityLevel = SeverityLevel.Information;
+            telemetryClient.TrackTrace(traceSample);
+
             return View();
         }
 
@@ -100,10 +131,26 @@ namespace MvcMusicStore.Controllers
                     // Migrate the newly registered user's shopping cart
                     MigrateShoppingCart(model.UserName);
 
+                    var telemetryClient = new Microsoft.ApplicationInsights.TelemetryClient();
+
+                    //Sample Trace telemetry
+                    TraceTelemetry traceSample = new TraceTelemetry();
+                    traceSample.Message = "Registered succesfully";
+                    traceSample.SeverityLevel = SeverityLevel.Information;
+                    telemetryClient.TrackTrace(traceSample);
+
                     return RedirectToAction("Index", "Home");
                 }
                 catch (MembershipCreateUserException e)
                 {
+                    var telemetryClient = new Microsoft.ApplicationInsights.TelemetryClient();
+
+                    //Sample Trace telemetry
+                    TraceTelemetry traceSample = new TraceTelemetry();
+                    traceSample.Message = "Registration failed";
+                    traceSample.SeverityLevel = SeverityLevel.Error;
+                    telemetryClient.TrackTrace(traceSample);
+
                     ModelState.AddModelError("", ErrorCodeToString(e.StatusCode));
                 }
             }
