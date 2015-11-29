@@ -66,10 +66,10 @@ namespace MvcMusicStore.Controllers
             // Group the order details by genre and return
             // the genre with the highest count
 
-            return storeDB.Genres
+            return Task.FromResult<List<Genre>>(storeDB.Genres
                 .OrderByDescending(a => a.Albums.Count())
                 .Take(count)
-                .ToListAsync();
+                .ToList());
         }
 
         private Tuple<int> GetTotalGenres()

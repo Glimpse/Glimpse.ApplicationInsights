@@ -18,11 +18,11 @@ namespace MvcMusicStore.Models
         public DbSet<UserProfile> UserProfiles { get; set; }
     }
 
-    [Table("UserProfile")]
+    [System.ComponentModel.DataAnnotations.Table("UserProfile")]
     public class UserProfile
     {
         [Key]
-        [DatabaseGeneratedAttribute(DatabaseGeneratedOption.Identity)]
+        [System.ComponentModel.DataAnnotations.DatabaseGeneratedAttribute(System.ComponentModel.DataAnnotations.DatabaseGeneratedOption.Identity)]
         public int UserId { get; set; }
         public string UserName { get; set; }
     }

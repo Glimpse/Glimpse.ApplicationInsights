@@ -70,10 +70,10 @@ namespace MvcMusicStore.Controllers
             // Group the order details by album and return
             // the albums with the highest count
 
-            return storeDB.Albums
+            return Task.FromResult<List<Album>>( storeDB.Albums
                 .OrderByDescending(a => a.OrderDetails.Count())
                 .Take(count)
-                .ToListAsync();
+                .ToList());
         }
 
         private Tuple<int, int> GetTotalAlbumns()
