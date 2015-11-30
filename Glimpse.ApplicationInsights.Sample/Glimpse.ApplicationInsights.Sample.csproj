@@ -24,7 +24,7 @@
     <IISExpressUseClassicPipelineMode />
     <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\</SolutionDir>
     <RestorePackages>true</RestorePackages>
-    <NuGetPackageImportStamp>0d6d8a8a</NuGetPackageImportStamp>
+    <NuGetPackageImportStamp>cb00f558</NuGetPackageImportStamp>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -254,6 +254,18 @@
     <Compile Include="ViewModels\ShoppingCartViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="App_Data\ASPNETDB.MDF" />
+    <Content Include="App_Data\ASPNETDB_log.ldf">
+      <DependentUpon>ASPNETDB.MDF</DependentUpon>
+    </Content>
+    <Content Include="App_Data\ASPNETDB_log_ReadOnly.ldf" />
+    <Content Include="App_Data\ASPNETDB_ReadOnly.mdf" />
+    <Content Include="App_Data\MvcMusicStore.mdf" />
+    <Content Include="App_Data\MvcMusicStore_log.ldf">
+      <DependentUpon>MvcMusicStore.mdf</DependentUpon>
+    </Content>
+    <Content Include="App_Data\MvcMusicStore_log_ReadOnly.ldf" />
+    <Content Include="App_Data\MvcMusicStore_ReadOnly.mdf" />
     <Content Include="Images\home-showcase.png" />
     <Content Include="Images\logo.png" />
     <Content Include="Images\logo.svg" />
@@ -323,9 +335,7 @@
     <Content Include="Views\AttributeRoutingTest\Index.cshtml" />
     <Content Include="Views\AttributeRoutingTest\AttrRouteTest.cshtml" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="App_Data\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <Content Include="packages.config" />
   </ItemGroup>
@@ -356,9 +366,6 @@
       <Project>{a4e8a925-a40e-41be-a6f0-cb1798082f60}</Project>
       <Name>Glimpse.ApplicationInsights</Name>
     </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Properties\PublishProfiles\Edumoodleglimpse.pubxml" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(VSToolsPath)\WebApplications\Microsoft.WebApplication.targets" Condition="'$(VSToolsPath)' != ''" />
