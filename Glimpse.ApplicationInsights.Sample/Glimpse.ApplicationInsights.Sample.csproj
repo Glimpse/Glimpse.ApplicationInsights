@@ -266,6 +266,9 @@
     </Content>
     <Content Include="App_Data\MvcMusicStore_log_ReadOnly.ldf" />
     <Content Include="App_Data\MvcMusicStore_ReadOnly.mdf" />
+    <Content Include="Content\Images\home-showcase.png" />
+    <Content Include="Content\Images\logo.png" />
+    <Content Include="Content\Images\placeholder.gif" />
     <Content Include="Images\home-showcase.png" />
     <Content Include="Images\logo.png" />
     <Content Include="Images\logo.svg" />
