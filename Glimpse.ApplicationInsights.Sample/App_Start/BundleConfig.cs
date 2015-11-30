@@ -20,7 +20,7 @@ namespace MvcMusicStore
             bundles.Add(new ScriptBundle("~/bundles/modernizr").Include(  
                 "~/Scripts/modernizr-*"));  
 
-            bundles.Add(new StyleBundle("~/Content/css").Include("~/Content/site.css"));
+            bundles.Add(new StyleBundle("~/Content/css.css").Include("~/Content/site.css"));
         }
     }
 }
