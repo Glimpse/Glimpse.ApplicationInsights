@@ -11,7 +11,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Glimpse.ApplicationInsights
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Glimpse.ApplicationInsights.Nuget.Core", "NuGet\Glimpse.ApplicationInsights.Nuget.Core\Glimpse.ApplicationInsights.Nuget.Core.csproj", "{2E8AA54B-43AD-4093-AF35-2F8095CDAB14}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Glimpse.ApplicationInsights.Nuget.Full", "NuGet\Glimpse.ApplicationInsights.Nuget.Full\Glimpse.ApplicationInsights.Nuget.Full.csproj", "{E3E379DF-F4C6-4180-9B81-6769533ABE47}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Glimpse.ApplicationInsights.Nuget.Web", "NuGet\Glimpse.ApplicationInsights.Nuget.Web\Glimpse.ApplicationInsights.Nuget.Web.csproj", "{E3E379DF-F4C6-4180-9B81-6769533ABE47}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{B370D3C7-BC5A-4C94-B7F7-6EC30D11798C}"
 	ProjectSection(SolutionItems) = preProject

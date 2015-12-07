@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
   <metadata>
-    <id>Glimpse.ApplicationInsights.Full</id>
+    <id>Glimpse.ApplicationInsights.Web</id>
     <version>$version$</version>
     <title>Glimpse Application Insights for Web Applications</title>
     <authors>SergeyKanzhelev</authors>

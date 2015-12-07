@@ -19,14 +19,14 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup>
-    <PackageSpecFile>$(MSBuildProjectDirectory)\Glimpse.ApplicationInsights.Full.nuspec</PackageSpecFile>
+    <PackageSpecFile>$(MSBuildProjectDirectory)\Glimpse.ApplicationInsights.Web.nuspec</PackageSpecFile>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{E3E379DF-F4C6-4180-9B81-6769533ABE47}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Glimpse.ApplicationInsights.Nuget.Full</RootNamespace>
-    <AssemblyName>Glimpse.ApplicationInsights.Nuget.Full</AssemblyName>
+    <RootNamespace>Glimpse.ApplicationInsights.Nuget.Web</RootNamespace>
+    <AssemblyName>Glimpse.ApplicationInsights.Nuget.Web</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <NuGetPackageImportStamp>61ec3c13</NuGetPackageImportStamp>
@@ -35,7 +35,7 @@
     <PackageVersionFile>$(OutputPath)Glimpse.ApplicationInsights.dll</PackageVersionFile>
   </PropertyGroup>
   <ItemGroup>
-    <None Include="Glimpse.ApplicationInsights.Full.nuspec" />
+    <None Include="Glimpse.ApplicationInsights.Web.nuspec" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\Glimpse.ApplicationInsights\Glimpse.ApplicationInsights.csproj">
