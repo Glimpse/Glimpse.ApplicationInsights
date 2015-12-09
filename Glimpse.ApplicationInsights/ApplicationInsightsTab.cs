@@ -8,13 +8,10 @@ namespace Glimpse.ApplicationInsights
     using System;
     using System.Collections.Generic;
     using System.Globalization;
-    using System.Linq;
     using System.Web;
     using Glimpse.Core.Extensibility;
     using Glimpse.Core.Extensions;
-    using Glimpse.Core.Message;
     using Glimpse.Core.Tab.Assist;
-    using Microsoft.ApplicationInsights;
     using Microsoft.ApplicationInsights.Channel;
     using Microsoft.ApplicationInsights.DataContracts;
     using Microsoft.ApplicationInsights.Extensibility;

@@ -5,7 +5,6 @@
 //-----------------------------------------------------------------------
 namespace Glimpse.ApplicationInsights.Model
 {
-    using System;
     using Microsoft.ApplicationInsights.DataContracts;
     
     /// <summary>

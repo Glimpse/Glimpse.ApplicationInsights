@@ -6,13 +6,9 @@
 namespace Glimpse.ApplicationInsights.Model
 {
     using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
-    using System.Threading.Tasks;
     using Glimpse.Core.Message;
     using Microsoft.ApplicationInsights.DataContracts;
-    
+
     /// <summary>
     /// Convert class from Trace Telemetry to Trace Message
     /// </summary>
