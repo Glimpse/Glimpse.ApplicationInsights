@@ -3,7 +3,7 @@
 //     Copyright (c) Glimpse. All rights reserved.
 // </copyright>
 //-----------------------------------------------------------------------
-namespace Glimpse.ApplicationInsights.Model
+namespace Glimpse.ApplicationInsights.Model.Trace
 {
     using Microsoft.ApplicationInsights.DataContracts;
     

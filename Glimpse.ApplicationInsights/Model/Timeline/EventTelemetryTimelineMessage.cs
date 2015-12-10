@@ -1,28 +1,28 @@
 ﻿//-----------------------------------------------------------------------
-// <copyright file="ExceptionTelemetryTimelineMessage.cs" company="Glimpse">
+// <copyright file="EventTelemetryTimelineMessage.cs" company="Glimpse">
 //     Copyright (c) Glimpse. All rights reserved.
 // </copyright>
 //-----------------------------------------------------------------------
-namespace Glimpse.ApplicationInsights.Model
+namespace Glimpse.ApplicationInsights.Model.Timeline
 {
     using System;
     using Glimpse.Core.Message;
     using Microsoft.ApplicationInsights.DataContracts;
     
     /// <summary>
-    /// Convert class from Exception Telemetry to Timeline Message
-    /// </summary>
-    public class ExceptionTelemetryTimelineMessage : ITimelineMessage
+    /// Convert class from Event Telemetry to Timeline Message
+    /// </summary> 
+    public class EventTelemetryTimelineMessage : ITimelineMessage
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="ExceptionTelemetryTimelineMessage"/> class.
+        /// Initializes a new instance of the <see cref="EventTelemetryTimelineMessage"/> class.
         /// </summary>
         /// <param name="telemetry">object telemetry</param>
-        public ExceptionTelemetryTimelineMessage(ExceptionTelemetry telemetry)
+        public EventTelemetryTimelineMessage(EventTelemetry telemetry)
         {
-            this.EventName = telemetry.Exception.Message;
+            this.EventName = telemetry.Name;
             this.EventCategory = new TimelineCategoryItem("Application Insights", "green", "yellow");
-            this.EventSubText = "Exception of type: " + telemetry.Exception.Message + "<br> Happened in: " + telemetry.Exception.StackTrace;
+            this.EventSubText = "Device ID: " + telemetry.Context.Device.Id;
         }
 
         /// <summary>

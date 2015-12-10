@@ -12,6 +12,8 @@ namespace Glimpse.ApplicationInsights
     using Glimpse.Core.Framework;
     using Microsoft.ApplicationInsights.Channel;
     using Microsoft.ApplicationInsights.DataContracts;
+    using Glimpse.ApplicationInsights.Model.Trace;
+    using Glimpse.ApplicationInsights.Model.Timeline;
 
     /// <summary>
     /// Telemetry channel that will send Application Insights telemetry

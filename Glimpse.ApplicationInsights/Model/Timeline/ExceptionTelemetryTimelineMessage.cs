@@ -1,38 +1,28 @@
 ﻿//-----------------------------------------------------------------------
-// <copyright file="DependencyTelemetryTimelineMessage.cs" company="Glimpse">
+// <copyright file="ExceptionTelemetryTimelineMessage.cs" company="Glimpse">
 //     Copyright (c) Glimpse. All rights reserved.
 // </copyright>
 //-----------------------------------------------------------------------
-namespace Glimpse.ApplicationInsights.Model
+namespace Glimpse.ApplicationInsights.Model.Timeline
 {
     using System;
     using Glimpse.Core.Message;
     using Microsoft.ApplicationInsights.DataContracts;
-
+    
     /// <summary>
-    /// Convert class from Dependency Telemetry to Timeline Message
+    /// Convert class from Exception Telemetry to Timeline Message
     /// </summary>
-    public class DependencyTelemetryTimelineMessage : ITimelineMessage
+    public class ExceptionTelemetryTimelineMessage : ITimelineMessage
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="DependencyTelemetryTimelineMessage"/> class.
+        /// Initializes a new instance of the <see cref="ExceptionTelemetryTimelineMessage"/> class.
         /// </summary>
         /// <param name="telemetry">object telemetry</param>
-        public DependencyTelemetryTimelineMessage(DependencyTelemetry telemetry)
+        public ExceptionTelemetryTimelineMessage(ExceptionTelemetry telemetry)
         {
-            this.EventName = telemetry.DependencyKind + ": " + telemetry.Name.Split('|')[0];
-            if (telemetry.Success.HasValue ? telemetry.Success.Value : false)
-            {
-                this.EventCategory = new TimelineCategoryItem("Application Insights", "green", "yellow");
-            }
-            else 
-            {
-                this.EventCategory = new TimelineCategoryItem("Application Insights Unsuccessful", "red", "orange");
-            }
-
-            this.EventSubText = telemetry.Name;
-            this.Duration = telemetry.Duration;
-            this.StartTime = telemetry.StartTime.DateTime;
+            this.EventName = telemetry.Exception.Message;
+            this.EventCategory = new TimelineCategoryItem("Application Insights", "green", "yellow");
+            this.EventSubText = "Exception of type: " + telemetry.Exception.Message + "<br> Happened in: " + telemetry.Exception.StackTrace;
         }
 
         /// <summary>

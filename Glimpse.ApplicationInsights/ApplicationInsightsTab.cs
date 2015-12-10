@@ -15,7 +15,8 @@ namespace Glimpse.ApplicationInsights
     using Microsoft.ApplicationInsights.Channel;
     using Microsoft.ApplicationInsights.DataContracts;
     using Microsoft.ApplicationInsights.Extensibility;
-    
+    using Glimpse.ApplicationInsights.Model.TelemetryTab;
+
     /// <summary>
     /// Trace tab
     /// </summary>
@@ -34,6 +35,11 @@ namespace Glimpse.ApplicationInsights
                     r.Cell("type").WithTitle("Type");
                     r.Cell("context").WithTitle("Context");
                 }).Build();
+
+        /// <summary>
+        /// MessageBroker for subscribing the messages to Glimpse
+        /// </summary>
+        private IMessageBroker messageBroker;
 
         /// <summary>
         /// Gets the name that will show in the tab.
@@ -99,73 +105,32 @@ namespace Glimpse.ApplicationInsights
             {
                 if (telemetry is TraceTelemetry)
                 {
-                    var trace = telemetry as TraceTelemetry;
-                    data.Add(new
-                        {
-                            time = trace.Timestamp.DateTime,
-                            name = trace.Message,
-                            details = trace.Sequence,
-                            properties = trace.Properties,
-                            type = "Trace",
-                            context = trace.Context
-                        });
+                    var trace = new TraceTelemetryMessage(telemetry as TraceTelemetry);
+                    data.Add(trace);
                 }
 
                 if (telemetry is DependencyTelemetry) 
                 {
-                    var dependency = telemetry as DependencyTelemetry;
-                    data.Add(new
-                        {
-                            time = dependency.Timestamp.DateTime,
-                            name = dependency.DependencyKind + ": " + dependency.Name.Split('|')[0],
-                            details = dependency.Name,
-                            properties = dependency.Properties,
-                            type = "Dependency",
-                            context = dependency.Context
-                        });
+                    var dependency = new DependencyTelemetryMessage(telemetry as DependencyTelemetry);
+                    data.Add(dependency);
                 }
 
                 if (telemetry is EventTelemetry)
                 {
-                    var tevent = telemetry as EventTelemetry;
-                    data.Add(new
-                        {
-                            time = tevent.Timestamp.DateTime,
-                            name = tevent.Name,
-                            details = "Role Instance ID: " + telemetry.Context.Device.RoleInstance,
-                            properties = tevent.Properties,
-                            type = "Event",
-                            context = tevent.Context
-                        });
+                    var tevent = new EventTelemetryMessage(telemetry as EventTelemetry);
+                    data.Add(tevent);
                 }
 
                 if (telemetry is ExceptionTelemetry)
                 {
-                    var exception = telemetry as ExceptionTelemetry;
-                    data.Add(new
-                        {
-                            time = exception.Timestamp.DateTime,
-                            name = exception.Exception.Message,
-                            details = "Exception of type: " + exception.Exception.Message + "\n\r Happened in: " + exception.Exception.StackTrace,
-                            properties = exception.Properties,
-                            type = "Exception",
-                            context = exception.Context
-                        });
+                    var exception = new ExceptionTelemetryMessage(telemetry as ExceptionTelemetry);
+                    data.Add(exception);
                 }
 
                 if (telemetry is RequestTelemetry)
                 {
-                    var request = telemetry as RequestTelemetry;
-                    data.Add(new
-                        {
-                            time = request.Timestamp.DateTime,
-                            name = request.Name,
-                            details = "Response Code: " + request.ResponseCode + "\n\r Succesful Request: " + request.Success +
-                            "\n\r Request URL: " + request.Url + "\n\r Role instance: " + request.Context.Device.RoleInstance,
-                            properties = request.Properties,
-                            type = "Request",
-                            context = request.Context
-                        });
+                    var request = new RequestTelemetryMessage(telemetry as RequestTelemetry);
+                    data.Add(request);
                 }
             }
 
@@ -194,16 +159,7 @@ namespace Glimpse.ApplicationInsights
                     initializer.Initialize(requestTelemetry);
                 }
 
-                data.Add(new
-                {
-                    time = requestTelemetry.Timestamp.DateTime,
-                    name = requestTelemetry.Name,
-                    details = "Response Code: " + requestTelemetry.ResponseCode + "\n\r Succesful Request: " + requestTelemetry.Success +
-                    "\n\r Request URL: " + requestTelemetry.Url + "\n\r Role instance: " + requestTelemetry.Context.Device.RoleInstance,
-                    properties = requestTelemetry.Properties,
-                    type = "Request",
-                    context = requestTelemetry.Context
-                });
+                data.Add(new RequestTelemetryMessage(requestTelemetry));
             }
 
             return data;

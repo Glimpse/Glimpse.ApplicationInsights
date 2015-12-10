@@ -1,37 +1,36 @@
 ﻿//-----------------------------------------------------------------------
-// <copyright file="RequestTelemetryTimelineMessage.cs" company="Glimpse">
+// <copyright file="DependencyTelemetryTimelineMessage.cs" company="Glimpse">
 //     Copyright (c) Glimpse. All rights reserved.
 // </copyright>
 //-----------------------------------------------------------------------
-namespace Glimpse.ApplicationInsights.Model
+namespace Glimpse.ApplicationInsights.Model.Timeline
 {
     using System;
     using Glimpse.Core.Message;
     using Microsoft.ApplicationInsights.DataContracts;
-    
+
     /// <summary>
-    /// Convert class from Request Telemetry to Timeline Message
+    /// Convert class from Dependency Telemetry to Timeline Message
     /// </summary>
-    public class RequestTelemetryTimelineMessage : ITimelineMessage
+    public class DependencyTelemetryTimelineMessage : ITimelineMessage
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="RequestTelemetryTimelineMessage"/> class.
+        /// Initializes a new instance of the <see cref="DependencyTelemetryTimelineMessage"/> class.
         /// </summary>
         /// <param name="telemetry">object telemetry</param>
-        public RequestTelemetryTimelineMessage(RequestTelemetry telemetry)
+        public DependencyTelemetryTimelineMessage(DependencyTelemetry telemetry)
         {
-            this.EventName = telemetry.Name;
-            if (telemetry.Success) 
+            this.EventName = telemetry.DependencyKind + ": " + telemetry.Name.Split('|')[0];
+            if (telemetry.Success.HasValue ? telemetry.Success.Value : false)
             {
                 this.EventCategory = new TimelineCategoryItem("Application Insights", "green", "yellow");
             }
-            else
+            else 
             {
                 this.EventCategory = new TimelineCategoryItem("Application Insights Unsuccessful", "red", "orange");
             }
 
-            this.EventSubText = "Response Code: " + telemetry.ResponseCode + "<br> Succesful Request: " + telemetry.Success +
-                "<br> Request URL: " + telemetry.Url + "<br> Device ID: " + telemetry.Context.Device.Id;
+            this.EventSubText = telemetry.Name;
             this.Duration = telemetry.Duration;
             this.StartTime = telemetry.StartTime.DateTime;
         }

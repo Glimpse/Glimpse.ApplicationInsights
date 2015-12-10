@@ -1,27 +1,27 @@
 ﻿//-----------------------------------------------------------------------
-// <copyright file="TraceTelemetryTraceMessage.cs" company="Glimpse">
+// <copyright file="EventTelemetryTraceMessage.cs" company="Glimpse">
 //     Copyright (c) Glimpse. All rights reserved.
 // </copyright>
 //-----------------------------------------------------------------------
-namespace Glimpse.ApplicationInsights.Model
+namespace Glimpse.ApplicationInsights.Model.Trace
 {
     using System;
     using Glimpse.Core.Message;
     using Microsoft.ApplicationInsights.DataContracts;
 
     /// <summary>
-    /// Convert class from Trace Telemetry to Trace Message
+    /// Convert class from Event Telemetry to Trace Message
     /// </summary>
-    public class TraceTelemetryTraceMessage : ITraceMessage
+    public class EventTelemetryTraceMessage : ITraceMessage
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="TraceTelemetryTraceMessage" /> class.
+        /// Initializes a new instance of the <see cref="EventTelemetryTraceMessage" /> class.
         /// </summary>
         /// <param name="telemetry">Telemetry item to be converted. </param>
-        public TraceTelemetryTraceMessage(TraceTelemetry telemetry)
+        public EventTelemetryTraceMessage(EventTelemetry telemetry)
         {
-            this.Category = telemetry.SeverityLevel == null ? "--" : SeverityToGlimpseCategory.SeverityToCategory((SeverityLevel)telemetry.SeverityLevel);
-            this.Message = telemetry.Message;
+            this.Category = "info";
+            this.Message = "Custom event: " + telemetry.Name;
             this.IndentLevel = 0;
         }
 

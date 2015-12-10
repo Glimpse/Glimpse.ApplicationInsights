@@ -1,28 +1,39 @@
 ﻿//-----------------------------------------------------------------------
-// <copyright file="EventTelemetryTimelineMessage.cs" company="Glimpse">
+// <copyright file="RequestTelemetryTimelineMessage.cs" company="Glimpse">
 //     Copyright (c) Glimpse. All rights reserved.
 // </copyright>
 //-----------------------------------------------------------------------
-namespace Glimpse.ApplicationInsights.Model
+namespace Glimpse.ApplicationInsights.Model.Timeline
 {
     using System;
     using Glimpse.Core.Message;
     using Microsoft.ApplicationInsights.DataContracts;
     
     /// <summary>
-    /// Convert class from Event Telemetry to Timeline Message
-    /// </summary> 
-    public class EventTelemetryTimelineMessage : ITimelineMessage
+    /// Convert class from Request Telemetry to Timeline Message
+    /// </summary>
+    public class RequestTelemetryTimelineMessage : ITimelineMessage
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="EventTelemetryTimelineMessage"/> class.
+        /// Initializes a new instance of the <see cref="RequestTelemetryTimelineMessage"/> class.
         /// </summary>
         /// <param name="telemetry">object telemetry</param>
-        public EventTelemetryTimelineMessage(EventTelemetry telemetry)
+        public RequestTelemetryTimelineMessage(RequestTelemetry telemetry)
         {
             this.EventName = telemetry.Name;
-            this.EventCategory = new TimelineCategoryItem("Application Insights", "green", "yellow");
-            this.EventSubText = "Device ID: " + telemetry.Context.Device.Id;
+            if (telemetry.Success) 
+            {
+                this.EventCategory = new TimelineCategoryItem("Application Insights", "green", "yellow");
+            }
+            else
+            {
+                this.EventCategory = new TimelineCategoryItem("Application Insights Unsuccessful", "red", "orange");
+            }
+
+            this.EventSubText = "Response Code: " + telemetry.ResponseCode + "<br> Succesful Request: " + telemetry.Success +
+                "<br> Request URL: " + telemetry.Url + "<br> Device ID: " + telemetry.Context.Device.Id;
+            this.Duration = telemetry.Duration;
+            this.StartTime = telemetry.StartTime.DateTime;
         }
 
         /// <summary>

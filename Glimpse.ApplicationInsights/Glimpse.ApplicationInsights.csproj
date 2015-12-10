@@ -81,14 +81,20 @@
   <ItemGroup>
     <Compile Include="ApplicationInsightsTab.cs" />
     <Compile Include="GlimpseTelemetryChannel.cs" />
-    <Compile Include="Model\DependencyTelemetryTimelineMessage.cs" />
-    <Compile Include="Model\EventTelemetryTimelineMessage.cs" />
-    <Compile Include="Model\ExceptionTelemetryTimelineMessage.cs" />
-    <Compile Include="Model\ExceptionTelemetryTraceMessage.cs" />
-    <Compile Include="Model\RequestTelemetryTimelineMessage.cs" />
-    <Compile Include="Model\SeverityToGlimpseCategory.cs" />
-    <Compile Include="Model\TraceTelemetryTraceMessage.cs" />
-    <Compile Include="Model\EventTelemetryTraceMessage.cs" />
+    <Compile Include="Model\TelemetryTab\RequestTelemetryMessage.cs" />
+    <Compile Include="Model\TelemetryTab\ExceptionTelemetryMessage.cs" />
+    <Compile Include="Model\TelemetryTab\ITelemetryMessage.cs" />
+    <Compile Include="Model\TelemetryTab\DependencyTelemetryMessage.cs" />
+    <Compile Include="Model\TelemetryTab\EventTelemetryMessage.cs" />
+    <Compile Include="Model\TelemetryTab\TraceTelemetryMessage.cs" />
+    <Compile Include="Model\Timeline\DependencyTelemetryTimelineMessage.cs" />
+    <Compile Include="Model\Timeline\EventTelemetryTimelineMessage.cs" />
+    <Compile Include="Model\Timeline\ExceptionTelemetryTimelineMessage.cs" />
+    <Compile Include="Model\Trace\ExceptionTelemetryTraceMessage.cs" />
+    <Compile Include="Model\Timeline\RequestTelemetryTimelineMessage.cs" />
+    <Compile Include="Model\Trace\SeverityToGlimpseCategory.cs" />
+    <Compile Include="Model\Trace\TraceTelemetryTraceMessage.cs" />
+    <Compile Include="Model\Trace\EventTelemetryTraceMessage.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
