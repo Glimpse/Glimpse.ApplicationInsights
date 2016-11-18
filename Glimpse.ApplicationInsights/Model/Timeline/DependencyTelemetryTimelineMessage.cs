@@ -20,7 +20,7 @@ namespace Glimpse.ApplicationInsights.Model.Timeline
         /// <param name="telemetry">object telemetry</param>
         public DependencyTelemetryTimelineMessage(DependencyTelemetry telemetry)
         {
-            this.EventName = telemetry.DependencyKind + ": " + telemetry.Name.Split('|')[0];
+            this.EventName = telemetry.Type + ": " + telemetry.Name.Split('|')[0];
             if (telemetry.Success.HasValue ? telemetry.Success.Value : false)
             {
                 this.EventCategory = new TimelineCategoryItem("Application Insights", "green", "yellow");
@@ -32,7 +32,7 @@ namespace Glimpse.ApplicationInsights.Model.Timeline
 
             this.EventSubText = telemetry.Name;
             this.Duration = telemetry.Duration;
-            this.StartTime = telemetry.StartTime.DateTime;
+            this.StartTime = telemetry.Timestamp.DateTime;
         }
 
         /// <summary>

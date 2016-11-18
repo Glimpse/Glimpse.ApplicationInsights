@@ -151,7 +151,6 @@ namespace Glimpse.ApplicationInsights
                         (ctx.Response.StatusCode < 400) ||
                         (ctx.Response.StatusCode == 401);
                     requestTelemetry.Url = ctx.Request.Unvalidated.Url;
-                    requestTelemetry.HttpMethod = ctx.Request.HttpMethod;
                 }
 
                 foreach (var initializer in TelemetryConfiguration.Active.TelemetryInitializers)
