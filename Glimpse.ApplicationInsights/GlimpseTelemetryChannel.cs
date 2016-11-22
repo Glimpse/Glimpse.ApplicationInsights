@@ -224,7 +224,10 @@ namespace Glimpse.ApplicationInsights
             // Filter telemetry with empty instrumentation key
             if (item.Context.InstrumentationKey != null && !item.Context.InstrumentationKey.Equals("00000000-0000-0000-0000-000000000000"))
             {
-                this.Channel.Send(item);
+                if (this.Channel != null)
+                {
+                    this.Channel.Send(item);
+                }
             }
         }
 
