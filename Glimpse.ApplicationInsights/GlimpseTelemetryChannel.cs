@@ -14,12 +14,13 @@ namespace Glimpse.ApplicationInsights
     using Microsoft.ApplicationInsights.DataContracts;
     using Glimpse.ApplicationInsights.Model.Trace;
     using Glimpse.ApplicationInsights.Model.Timeline;
+    using Microsoft.ApplicationInsights.Extensibility;
 
     /// <summary>
     /// Telemetry channel that will send Application Insights telemetry
     /// to Glimpse message broker and to the Application Insights channel.
     /// </summary>
-    public class GlimpseTelemetryChannel : ITelemetryChannel
+    public class GlimpseTelemetryChannel : ITelemetryChannel, ITelemetryModule
     {
         /// <summary>
         /// Stopwatch from the last telemetry
@@ -251,6 +252,14 @@ namespace Glimpse.ApplicationInsights
             var result = fromLastWatch.Elapsed;
             fromLastWatch = Stopwatch.StartNew();
             return result;
+        }
+
+        public void Initialize(TelemetryConfiguration configuration)
+        {
+            if (this.Channel is ITelemetryModule && this.Channel != null)
+            {
+                ((ITelemetryModule)this.Channel).Initialize(configuration);
+            }
         }
     }
 }

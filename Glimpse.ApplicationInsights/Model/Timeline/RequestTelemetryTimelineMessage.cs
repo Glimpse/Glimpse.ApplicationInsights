@@ -21,7 +21,7 @@ namespace Glimpse.ApplicationInsights.Model.Timeline
         public RequestTelemetryTimelineMessage(RequestTelemetry telemetry)
         {
             this.EventName = telemetry.Name;
-            if (telemetry.Success) 
+            if (!telemetry.Success.HasValue || telemetry.Success.Value == true) 
             {
                 this.EventCategory = new TimelineCategoryItem("Application Insights", "green", "yellow");
             }
@@ -33,7 +33,7 @@ namespace Glimpse.ApplicationInsights.Model.Timeline
             this.EventSubText = "Response Code: " + telemetry.ResponseCode + "<br> Succesful Request: " + telemetry.Success +
                 "<br> Request URL: " + telemetry.Url + "<br> Device ID: " + telemetry.Context.Device.Id;
             this.Duration = telemetry.Duration;
-            this.StartTime = telemetry.StartTime.DateTime;
+            this.StartTime = telemetry.Timestamp.DateTime;
         }
 
         /// <summary>

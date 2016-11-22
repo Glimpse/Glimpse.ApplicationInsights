@@ -9,8 +9,8 @@
         public DependencyTelemetryMessage(DependencyTelemetry dependency)
         {
             this.Time = dependency.Timestamp.DateTime;
-            this.Name = dependency.DependencyKind + ": " + dependency.Name.Split('|')[0];
-            this.Details = dependency.CommandName;
+            this.Name = dependency.Type + ": " + dependency.Name.Split('|')[0];
+            this.Details = dependency.Data;
             this.Properties = dependency.Properties.Count > 0 ? dependency.Properties : null;
             this.Type = "Dependency";
             this.Context = dependency.Context;
