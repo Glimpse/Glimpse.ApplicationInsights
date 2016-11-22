@@ -147,7 +147,7 @@ namespace Glimpse.ApplicationInsights
         {
             var timer = this.TimerStrategy();
 
-            if (item == null || timer == null || this.MessageBroker == null)
+            if (item == null)
             {
                 return;
             }
@@ -165,59 +165,60 @@ namespace Glimpse.ApplicationInsights
                 }
             }
 
-            if (item is TraceTelemetry)
+            if (timer != null && this.MessageBroker != null)
             {
-                var trace = item as TraceTelemetry;
-                var traceMessage = new TraceTelemetryTraceMessage(trace);
-                traceMessage.FromFirst = timer.Point().Offset;
-                traceMessage.FromLast = this.CalculateFromLast(timer);
-                this.MessageBroker.Publish(traceMessage);
-            }
+                if (item is TraceTelemetry)
+                {
+                    var trace = item as TraceTelemetry;
+                    var traceMessage = new TraceTelemetryTraceMessage(trace);
+                    traceMessage.FromFirst = timer.Point().Offset;
+                    traceMessage.FromLast = this.CalculateFromLast(timer);
+                    this.MessageBroker.Publish(traceMessage);
+                }
+                else if (item is EventTelemetry)
+                {
+                    // Send it to TraceTab
+                    var eventT = item as EventTelemetry;
+                    var eventMessage = new EventTelemetryTraceMessage(eventT);
+                    eventMessage.FromFirst = timer.Point().Offset;
+                    eventMessage.FromLast = this.CalculateFromLast(timer);
+                    this.MessageBroker.Publish(eventMessage);
 
-            if (item is EventTelemetry)
-            {
-                // Send it to TraceTab
-                var eventT = item as EventTelemetry;
-                var eventMessage = new EventTelemetryTraceMessage(eventT);
-                eventMessage.FromFirst = timer.Point().Offset;
-                eventMessage.FromLast = this.CalculateFromLast(timer);
-                this.MessageBroker.Publish(eventMessage);
+                    // Send it to TimelineTab
+                    var timelineMessage = new EventTelemetryTimelineMessage(eventT);
+                    timelineMessage.Offset = timer.Point().Offset;
+                    this.MessageBroker.Publish(timelineMessage);
+                }
+                else if (item is ExceptionTelemetry)
+                {
+                    // Send it to TraceTab
+                    var trace = item as ExceptionTelemetry;
+                    var traceMessage = new ExceptionTelemetryTraceMessage(trace);
+                    traceMessage.FromFirst = timer.Point().Offset;
+                    traceMessage.FromLast = this.CalculateFromLast(timer);
+                    this.MessageBroker.Publish(traceMessage);
 
-                // Send it to TimelineTab
-                var timelineMessage = new EventTelemetryTimelineMessage(eventT);
-                timelineMessage.Offset = timer.Point().Offset;
-                this.MessageBroker.Publish(timelineMessage);
-            }
+                    // Send it to TimelineTab
+                    var timelineMessage = new ExceptionTelemetryTimelineMessage(trace);
+                    timelineMessage.Offset = timer.Point().Offset;
+                    this.MessageBroker.Publish(timelineMessage);
+                }
+                else if (item is RequestTelemetry)
+                {
+                    var request = item as RequestTelemetry;
+                    var timelineMessage = new RequestTelemetryTimelineMessage(request);
+                    timelineMessage.Offset = timer.Point().Offset.Subtract(request.Duration);
+                    this.MessageBroker.Publish(timelineMessage);
+                }
+                else if (item is DependencyTelemetry)
+                {
+                    var dependency = item as DependencyTelemetry;
+                    var timelineMessage = new DependencyTelemetryTimelineMessage(dependency);
+                    timelineMessage.Offset = timer.Point().Offset.Subtract(dependency.Duration);
+                    this.MessageBroker.Publish(timelineMessage);
+                }
 
-            if (item is ExceptionTelemetry)
-            {
-                // Send it to TraceTab
-                var trace = item as ExceptionTelemetry;
-                var traceMessage = new ExceptionTelemetryTraceMessage(trace);
-                traceMessage.FromFirst = timer.Point().Offset;
-                traceMessage.FromLast = this.CalculateFromLast(timer);
-                this.MessageBroker.Publish(traceMessage);
-
-                // Send it to TimelineTab
-                var timelineMessage = new ExceptionTelemetryTimelineMessage(trace);
-                timelineMessage.Offset = timer.Point().Offset;
-                this.MessageBroker.Publish(timelineMessage);
-            }
-
-            if (item is RequestTelemetry)
-            {
-                var request = item as RequestTelemetry;
-                var timelineMessage = new RequestTelemetryTimelineMessage(request);
-                timelineMessage.Offset = timer.Point().Offset.Subtract(request.Duration);
-                this.MessageBroker.Publish(timelineMessage);
-            }
-
-            if (item is DependencyTelemetry)
-            {
-                var dependency = item as DependencyTelemetry;
-                var timelineMessage = new DependencyTelemetryTimelineMessage(dependency);
-                timelineMessage.Offset = timer.Point().Offset.Subtract(dependency.Duration);
-                this.MessageBroker.Publish(timelineMessage);
+                this.messageBroker.Publish(item);
             }
 
             // Filter telemetry with empty instrumentation key
@@ -225,8 +226,6 @@ namespace Glimpse.ApplicationInsights
             {
                 this.Channel.Send(item);
             }
-
-            this.messageBroker.Publish(item);
         }
 
        /// <summary>
