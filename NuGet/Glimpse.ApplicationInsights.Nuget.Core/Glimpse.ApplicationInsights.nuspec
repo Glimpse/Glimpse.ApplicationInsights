@@ -16,7 +16,7 @@
     <tags>Glimpse ApplicationInsights diagnostics</tags>
     <summary>Integration of Glimpse and Application Insights</summary>
     <dependencies>
-      <dependency id="Microsoft.ApplicationInsights" version="2.2.0-beta4" />
+      <dependency id="Microsoft.ApplicationInsights" version="2.2.0-beta6" />
       <dependency id="Glimpse" version="1.8.6" />
     </dependencies>
   </metadata>
