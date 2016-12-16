@@ -25,7 +25,7 @@
     <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\</SolutionDir>
     <RestorePackages>true</RestorePackages>
     <NuGetPackageImportStamp>cb00f558</NuGetPackageImportStamp>
-    <BuildUri Condition="$(BuildUri) == ''">$(SCM_COMMIT_ID)</BuildUri>
+    <BuildId Condition="$(BuildId) == ''">$(SCM_COMMIT_ID)</BuildId>
     <GenerateBuildInfoConfigFile>true</GenerateBuildInfoConfigFile>
     <IncludeServerNameInBuildInfo>true</IncludeServerNameInBuildInfo>
     <UseGlobalApplicationHostFile />
