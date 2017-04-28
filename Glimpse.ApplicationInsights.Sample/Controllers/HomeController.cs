@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 using System.Web.Mvc;
 using MvcMusicStore.Models;
 using Microsoft.ApplicationInsights.DataContracts;
+using System.Net.Http;
 
 namespace MvcMusicStore.Controllers
 {
@@ -25,6 +26,11 @@ namespace MvcMusicStore.Controllers
             var albums = await GetTopSellingAlbums(6);
             //var albums = GetTopSellingAlbums(6);
 
+            // generate dependency
+            var http = new HttpClient();
+            var result = await http.GetStringAsync("http://bing.com");
+            Trace.WriteLine($"bing page is that long: {result.Length}");
+
             // Trigger some good old ADO code 
             var albumCount = GetTotalAlbumns(); 
             Trace.Write(string.Format("Total number of Albums = {0} and Albums with 'The' = {1}", albumCount.Item1, albumCount.Item2));
@@ -39,7 +45,7 @@ namespace MvcMusicStore.Controllers
 
             //Sample event telemetry
             var properties = new Dictionary<string, string> { { "Property 1",string.Format("Album Count {0}" ,albumCount.Item1) } };
-            var measurements = new Dictionary<string, double> { { "Sample Meassurement", albumCount.Item1 } };
+            var measurements = new Dictionary<string, double> { { "Sample Measurement", albumCount.Item1 } };
             telemetryClient.TrackEvent("Top Selling Albums", properties, measurements);
 
             //Sample exception telemetry

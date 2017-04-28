@@ -46,7 +46,7 @@ namespace MvcMusicStore.Controllers
                 MigrateShoppingCart(model.UserName);
                 
                 //Sample Trace telemetry
-                traceSample.Message = "Login succesfull";
+                traceSample.Message = "Login successful";
                 traceSample.SeverityLevel = SeverityLevel.Information;
                 telemetryClient.TrackTrace(traceSample);
 
@@ -135,7 +135,7 @@ namespace MvcMusicStore.Controllers
 
                     //Sample Trace telemetry
                     TraceTelemetry traceSample = new TraceTelemetry();
-                    traceSample.Message = "Registered succesfully";
+                    traceSample.Message = "Registered successfully";
                     traceSample.SeverityLevel = SeverityLevel.Information;
                     telemetryClient.TrackTrace(traceSample);
 
