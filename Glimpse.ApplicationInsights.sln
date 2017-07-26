@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2013
-VisualStudioVersion = 12.0.40629.0
+# Visual Studio 15
+VisualStudioVersion = 15.0.26430.16
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Glimpse.ApplicationInsights", "Glimpse.ApplicationInsights\Glimpse.ApplicationInsights.csproj", "{A4E8A925-A40E-41BE-A6F0-CB1798082F60}"
 EndProject
@@ -9,7 +9,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Glimpse.ApplicationInsights
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Glimpse.ApplicationInsights.Test", "Glimpse.ApplicationInsights.Test\Glimpse.ApplicationInsights.Test.csproj", "{CD227E85-8F8F-4CC3-A26D-0AAA53825E1B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Glimpse.ApplicationInsights.Nuget.Core", "NuGet\Glimpse.ApplicationInsights.Nuget.Core\Glimpse.ApplicationInsights.Nuget.Core.csproj", "{2E8AA54B-43AD-4093-AF35-2F8095CDAB14}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Glimpse.ApplicationInsights.Nuget", "NuGet\Glimpse.ApplicationInsights.Nuget.Core\Glimpse.ApplicationInsights.Nuget.csproj", "{2E8AA54B-43AD-4093-AF35-2F8095CDAB14}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Glimpse.ApplicationInsights.Nuget.Web", "NuGet\Glimpse.ApplicationInsights.Nuget.Web\Glimpse.ApplicationInsights.Nuget.Web.csproj", "{E3E379DF-F4C6-4180-9B81-6769533ABE47}"
 EndProject

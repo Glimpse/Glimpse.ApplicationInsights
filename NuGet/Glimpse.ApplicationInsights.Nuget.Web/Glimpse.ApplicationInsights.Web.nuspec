@@ -18,7 +18,7 @@
     <dependencies>
       <dependency id="Glimpse" version="1.8.6" />
       <dependency id="Glimpse.AspNet" version="1.8.0" />
-      <dependency id="Microsoft.ApplicationInsights.Web" version="2.3.0-beta2" />
+      <dependency id="Microsoft.ApplicationInsights.Web" version="2.4.1" />
 	  <dependency id="Glimpse.ApplicationInsights" version="$version$" />
     </dependencies>
   </metadata>
